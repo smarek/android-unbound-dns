@@ -1,5 +1,4 @@
 # Android Unbound DNS
-====
 
 Goal is to get Unbound DNS fully working with UI to configure it and system integration (replacing system DNS)
 
@@ -38,7 +37,7 @@ Requirements:
   - # Get to package location
   - `cd /data/local/tmp/`
   - # Set LD_LIBRARY_PATH for binaries to see the linked ssl/event/expat/...
-  - `export LD_LIBRARY_PATH=`pwd`/lib/`
+  - `export LD_LIBRARY_PATH=/data/local/tmp/lib/`
   - # Make library symlinks, because `adb push` wont copy those
   - `cd lib`
   - `ln -s libexpat.so.1.6.0 libexpat.so.1`
