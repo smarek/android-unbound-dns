@@ -22,8 +22,7 @@ Requirements:
   - Expand all archives
     - tar xvf expat-2.1.0.tar.gz && tar xvf openssl-1.0.2d.tar.gz && tar xvf libevent-2.0.22-stable.tar.gz && tar xvf unbound-1.5.4.tar.gz
   - Launch the build script
-    - for bash - ./build.sh
-    - for fish - ./build.fish
+    - ./build.sh
   - Collect all libraries and binaries using packaging script
     - ./package.sh
   - Final compiled binaries and libraries are put within "package" directory in build root
