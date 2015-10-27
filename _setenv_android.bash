@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 export ANDROID_NDK_HOME={fill in your NDK path}
 export ANDROID_NDK_PLATFORM=21
@@ -32,6 +32,6 @@ export NM=$ANDROID_TARGET_PLATFORM-gcc-nm
 export RANLIB=$ANDROID_TARGET_PLATFORM-ranlib
 export CPPFLAGS="--sysroot=$ANDROID_NDK_SYSROOT"
 export CXXFLAGS="--sysroot=$ANDROID_NDK_SYSROOT"
-export CFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIE -pie"
-export LDFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIE -pie"
+export CFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIC -pie"
+export LDFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIC -pie"
 export PATH=$ANDROID_NDK_HOME/toolchains/$ANDROID_NDK_TARGET/prebuilt/$ANDROID_NDK_HOST_PLATFORM/bin:$PATH
