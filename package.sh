@@ -10,3 +10,6 @@ rsync -aP unbound-1.5.4/build/ package/
 rm -rf package/share/
 rm -rf package/lib/pkgconfig/
 rm -rf package/ssl/man/
+mv package/sbin/* package/bin/
+rm -rf package/sbin
+rm -rf package/include

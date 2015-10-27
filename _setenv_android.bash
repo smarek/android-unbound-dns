@@ -33,5 +33,5 @@ export RANLIB=$ANDROID_TARGET_PLATFORM-ranlib
 export CPPFLAGS="--sysroot=$ANDROID_NDK_SYSROOT"
 export CXXFLAGS="--sysroot=$ANDROID_NDK_SYSROOT"
 export CFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIE -pie"
-export LDFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIE -pie -Wl,Bstatic"
+export LDFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIE -pie"
 export PATH=$ANDROID_NDK_HOME/toolchains/$ANDROID_NDK_TARGET/prebuilt/$ANDROID_NDK_HOST_PLATFORM/bin:$PATH
