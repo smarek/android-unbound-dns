@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env -i bash
 
 # setup environment
 source _setenv_android.bash
