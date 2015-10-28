@@ -11,7 +11,7 @@ export CC=gcc
 cd openssl-1.0.2d/
 rm -rf build
 mkdir build
-./Configure no-ssl2 no-ssl3 shared no-zlib no-comp no-hw no-engine -fPIC -pie -fpic --prefix=`pwd`/build android
+./Configure no-ssl2 no-ssl3 shared no-zlib no-comp no-hw -fPIC -pie -fpic --prefix=`pwd`/build android
 make -j4 depend
 make -j4
 make -j4 install_sw
@@ -37,6 +37,11 @@ mkdir build
 ./configure --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --prefix=`pwd`/build/
 make -j4
 make -j4 install
+cd ..
+
+# setup environment
+unset CC
+source _setenv_android.bash
 
 # Configure and build Unbound
 cd unbound-1.5.4/
