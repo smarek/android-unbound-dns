@@ -8,7 +8,7 @@ rsync -aP expat-2.1.0/build/ package/
 rsync -aP libevent-2.0.22-stable/build/ package/
 rsync -aP openssl-1.0.2d/build/ package/
 rsync -aP unbound-1.5.4/build/ package/
-rsync -aP unbound-1.5.4/doc/example.conf package/bin/unbound.conf
+cp unbound.conf package/bin/
 
 rm -rf package/share/
 rm -rf package/lib/pkgconfig/
