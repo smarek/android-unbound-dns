@@ -11,7 +11,7 @@ export CC=gcc
 cd openssl-1.0.2d/
 rm -rf build
 mkdir build
-./Configure no-ssl2 no-ssl3 shared no-zlib no-comp no-hw -fPIC -pie -fpic --prefix=`pwd`/build android
+./Configure no-ssl2 no-ssl3 no-shared no-zlib no-comp no-hw -fPIC -pie -fpic --prefix=`pwd`/build android
 make -j4 depend
 make -j4
 make -j4 install_sw
@@ -24,7 +24,7 @@ export CC=arm-linux-androideabi-gcc
 cd expat-2.1.0/
 rm -rf build
 mkdir build
-./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi
+./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --disable-shared
 make -j4
 make -j4 install
 cd ..
@@ -34,7 +34,7 @@ export CFLAGS="--sysroot=$ANDROID_SYSROOT -pie -fPIE -march=armv7-a -mfloat-abi=
 cd libevent-2.0.22-stable/
 rm -rf build
 mkdir build
-./configure --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --prefix=`pwd`/build/
+./configure --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --prefix=`pwd`/build/ --disable-shared
 make -j4
 make -j4 install
 cd ..
