@@ -11,7 +11,7 @@ export CC=gcc
 cd openssl-1.0.2d/
 rm -rf build
 mkdir build
-./Configure no-ssl2 no-ssl3 no-shared no-zlib no-comp no-hw -fPIC -pie -fpic --prefix=`pwd`/build android
+./Configure no-ssl2 no-ssl3 no-shared no-zlib no-comp no-hw -fPIC -pie -fpic --install_prefix=`pwd`/build/ --prefix=".//" --openssldir="ssl" android
 make -j4 depend
 make -j4
 make -j4 install_sw
