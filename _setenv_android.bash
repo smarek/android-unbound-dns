@@ -1,5 +1,10 @@
 #!/bin/bash -x
 
+export _UNBOUND_NAME=unbound-1.5.4
+export _LIBEVENT_NAME=libevent-2.0.22-stable
+export _OPENSSL_NAME=openssl-1.0.2d
+export _EXPAT_NAME=expat-2.1.0
+
 export ANDROID_NDK_HOME={fill in your NDK path}
 export ANDROID_NDK_PLATFORM=21
 export ANDROID_NDK_ARCH=arm

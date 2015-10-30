@@ -1,4 +1,6 @@
 #!/bin/bash
 
-rm -rf expat-2.1.0 libevent-2.0.22-stable openssl-1.0.2d unbound-1.5.4
+source _setenv_android.bash
+
+rm -rf $_UNBOUND_NAME $_LIBEVENT_NAME $_OPENSSL_NAME $_EXPAT_NAME
 find . -maxdepth 1 -name '*.tar.gz' -exec tar xvf \{\} \;

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source _setenv_android.bash
+
 # Will fail on default OSX, use gsed provided by Homebrew or edit first line manually to be #!/system/bin/sh
 _SED=gsed
 
@@ -7,10 +9,10 @@ rm -rf package.zip
 rm -rf package
 mkdir package
 
-rsync -aqP expat-2.1.0/build/ package/
-rsync -aqP libevent-2.0.22-stable/build/ package/
-rsync -aqP openssl-1.0.2d/build/ package/
-rsync -aqP unbound-1.5.4/build/ package/
+rsync -aqP $_EXPAT_NAME/build/ package/
+rsync -aqP $_LIBEVENT_NAME/build/ package/
+rsync -aqP $_OPENSSL_NAME/build/ package/
+rsync -aqP $_UNBOUND_NAME/build/ package/
 cp unbound.conf package/bin/
 rm package/bin/unbound-control-setup
 cp unbound-control-setup package/bin/
