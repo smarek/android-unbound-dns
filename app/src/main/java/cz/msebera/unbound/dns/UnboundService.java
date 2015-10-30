@@ -52,7 +52,7 @@ public final class UnboundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         goForeground();
         updateZipFromAssets();
-        startUnbound();
+        startUnboundControlSetup();
         return START_NOT_STICKY;
     }
 
@@ -74,6 +74,32 @@ public final class UnboundService extends Service {
     }
 
 
+    private void startUnboundControlSetup() {
+        if (mainRunnable != null) {
+            mainRunnable.interrupt();
+        }
+        mainRunnable = new RunnableThread(new UnboundServiceCallback() {
+            @Override
+            public void threadFinished() {
+                startUnboundAnchor();
+            }
+        }, new File(getFilesDir(), "package"), "unbound-control-setup", null, "lib");
+        mainRunnable.start();
+    }
+
+    private void startUnboundAnchor() {
+        if (mainRunnable != null) {
+            mainRunnable.interrupt();
+        }
+        mainRunnable = new RunnableThread(new UnboundServiceCallback() {
+            @Override
+            public void threadFinished() {
+                startUnbound();
+            }
+        }, new File(getFilesDir(), "package"), "unbound-anchor", new String[]{"-C", "unbound.conf", "-v"}, "lib");
+        mainRunnable.start();
+    }
+
     private void startUnbound() {
         if (mainRunnable != null) {
             mainRunnable.interrupt();
@@ -81,9 +107,9 @@ public final class UnboundService extends Service {
         mainRunnable = new RunnableThread(new UnboundServiceCallback() {
             @Override
             public void threadFinished() {
-
+                stopForeground(true);
             }
-        }, new File(getFilesDir(), "package"), "unbound-control-setup", "lib");
+        }, new File(getFilesDir(), "package"), "unbound", new String[]{"-c", "unbound.conf"}, "lib");
         mainRunnable.start();
     }
 
