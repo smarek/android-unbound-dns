@@ -26,7 +26,7 @@ find package -name '*.la' -exec rm -f {} \;
 find package -name '*.py' -exec rm -f {} \;
 mv package/ssl package/bin/
 
-cp unbound.conf package/bin/
+cp unbound.conf package/bin/unbound.conf.default
 rm package/bin/unbound-control-setup
 cp unbound-control-setup package/bin/
 cp env.sh package/bin/
