@@ -13,12 +13,8 @@ I've managed to compile Unbound DNS in version 1.5.4 against OpenSSL 1.0.2d, Lib
 Requirements:
 
   - Android NDK r10d
-  - Download libraries into fetched repository
-    - expat-2.1.0.tar.gz (ie. http://kent.dl.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz )
-    - openssl-1.0.2d.tar.gz (ie. https://www.openssl.org/source/openssl-1.0.2d.tar.gz )
-    - libevent-2.0.22-stable.tar.gz (ie. https://github.com/libevent/libevent/releases/download/release-2.0.22-stable/libevent-2.0.22-stable.tar.gz )
-  - Download Unbound into fetched repository
-    - unbound-1.5.4.tar.gz (ie. https://unbound.net/downloads/unbound-1.5.4.tar.gz )
+  - Download Unbound and libraries into fetched repository
+    - ./download.sh
   - Run cleanup (will remove old folders and unpack original archives)
     - ./cleanup.sh
   - Launch the build script
