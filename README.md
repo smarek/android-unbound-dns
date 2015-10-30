@@ -34,7 +34,7 @@ Requirements:
   - # Expand zip archive
   - `unzip package.zip`
   - # Set Environment PATH variable
-  - `export PATH=$PATH:/data/local/tmp/package/bin/
+  - `export PATH=$PATH:/data/local/tmp/package/bin/`
   - # Setup remote control certificate
   - `unbound-control-setup`
   - # Run applications
