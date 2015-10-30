@@ -35,6 +35,8 @@ Requirements:
   - `unzip package.zip`
   - # Set Environment PATH variable
   - `export PATH=$PATH:/data/local/tmp/package/bin/
+  - # Setup remote control certificate
+  - `unbound-control-setup`
   - # Run applications
   - `unbound -h`
   - `unbound-anchor -h`
