@@ -40,8 +40,11 @@ Requirements:
   - `unbound-control-setup`
   - # Setup DNSSEC root key
   - `unbound-anchor -h`
-  - # Run applications
-  - `unbound -h`
-  - `unbound-control -h`
+  - # If you've edited unbound.conf, check it's correct
   - `unbound-checkconf`
-  - `unbound-host -h`
+  - # Run applications from `bin` folder
+  - `unbound -v -c unbound.conf`
+  - # Check if the server is running and unbound-control set up correctly
+  - `unbound-control status`
+  - # Check if the DNSSEC verification works correctly
+  - `unbound-host -d -C unbound.conf google.com`
