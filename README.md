@@ -33,13 +33,15 @@ Requirements:
   - `cd /data/local/tmp/`
   - # Expand zip archive
   - `unzip package.zip`
+  - `cd /data/local/tmp/package/bin`
   - # Set Environment PATH variable
-  - `export PATH=$PATH:/data/local/tmp/package/bin/`
+  - `./env.sh`
   - # Setup remote control certificate
   - `unbound-control-setup`
+  - # Setup DNSSEC root key
+  - `unbound-anchor -h`
   - # Run applications
   - `unbound -h`
-  - `unbound-anchor -h`
   - `unbound-control -h`
   - `unbound-checkconf`
   - `unbound-host -h`

@@ -16,6 +16,7 @@ rsync -aqP $_UNBOUND_NAME/build/ package/
 cp unbound.conf package/bin/
 rm package/bin/unbound-control-setup
 cp unbound-control-setup package/bin/
+cp env.sh package/bin/
 
 rm -rf package/share/
 rm -rf package/lib/pkgconfig/

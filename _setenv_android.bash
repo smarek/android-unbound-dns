@@ -11,14 +11,14 @@ export _LIBEVENT_NAME=libevent-2.0.22-stable
 export _OPENSSL_NAME=openssl-1.0.2d
 export _EXPAT_NAME=expat-2.1.0
 
-export ANDROID_NDK_HOME="/Users/mareksebera/Applications/android_ndk"
+export ANDROID_NDK_HOME=""
 test -n "$ANDROID_NDK_HOME" || error "Fill your NDK HOME in _setenv_android.bash"
 
 export ANDROID_NDK_PLATFORM=21
 export ANDROID_NDK_ARCH=arm
 export ANDROID_NDK_TARGET=arm-linux-androideabi-4.9
 
-export ANDROID_NDK_HOST_PLATFORM="darwin-x86_64"
+export ANDROID_NDK_HOST_PLATFORM=""
 test -n "$ANDROID_NDK_HOST_PLATFORM" || error "fill in your host platform, ie. darwin-x86_64, in _setenv_android.bash"
 
 export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
