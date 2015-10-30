@@ -12,6 +12,8 @@ rsync -aqP libevent-2.0.22-stable/build/ package/
 rsync -aqP openssl-1.0.2d/build/ package/
 rsync -aqP unbound-1.5.4/build/ package/
 cp unbound.conf package/bin/
+rm package/bin/unbound-control-setup
+cp unbound-control-setup package/bin/
 
 rm -rf package/share/
 rm -rf package/lib/pkgconfig/
