@@ -37,4 +37,6 @@ $_SED -i "1s/.*/#\!\/system\/bin\/sh/" package/bin/ssl/misc/c_info
 $_SED -i "1s/.*/#\!\/system\/bin\/sh/" package/bin/ssl/misc/c_issuer
 $_SED -i "1s/.*/#\!\/system\/bin\/sh/" package/bin/ssl/misc/c_name
 
+chmod +x package/bin/*
+
 zip -rq package.zip package
