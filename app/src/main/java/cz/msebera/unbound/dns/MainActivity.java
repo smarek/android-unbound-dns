@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.File;
+
 public final class MainActivity extends AppCompatActivity {
 
     private Button btn_StartStop;
@@ -29,6 +31,7 @@ public final class MainActivity extends AppCompatActivity {
                     setCorrectButtonsText();
                     break;
                 case R.id.mainButtonReload:
+                    new RunnableThread(null, new File(getFilesDir(), "package"), "unbound-control", new String[]{"-c", "unbound.conf", "reload"}, "lib").start();
                     break;
             }
         }

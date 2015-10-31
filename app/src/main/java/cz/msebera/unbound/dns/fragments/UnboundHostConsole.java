@@ -107,7 +107,7 @@ public final class UnboundHostConsole extends Fragment {
         }
         String _command = "-C unbound.conf " + command.getText();
         mainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-host", _command.split(" "), "lib", textareaStream);
-        textarea.setText("Command run: unbound-host " + _command);
+        textarea.setText("Command run: unbound-host " + _command + "\n");
         mainRunnable.start();
     }
 

@@ -107,7 +107,7 @@ public final class UnboundControlConsole extends Fragment {
         }
         String _command = "-c unbound.conf " + command.getText();
         mainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-control", _command.split(" "), "lib", textareaStream);
-        textarea.setText("Command run: unbound-control " + _command);
+        textarea.setText("Command run: unbound-control " + _command + "\n");
         mainRunnable.start();
     }
 

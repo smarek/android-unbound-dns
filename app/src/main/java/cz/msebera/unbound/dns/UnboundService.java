@@ -69,6 +69,7 @@ public final class UnboundService extends Service {
         if (mainRunnable != null && !mainRunnable.isInterrupted()) {
             mainRunnable.interrupt();
         }
+        started = false;
     }
 
     @Nullable
