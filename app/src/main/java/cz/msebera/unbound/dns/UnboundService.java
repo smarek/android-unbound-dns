@@ -47,10 +47,6 @@ public final class UnboundService extends Service {
         return isForeground;
     }
 
-    public interface UnboundServiceCallback {
-        void threadFinished();
-    }
-
     private final IBinder mBinder = new UnboundServiceBinder();
 
     @Override
@@ -96,7 +92,7 @@ public final class UnboundService extends Service {
             mainRunnable.interrupt();
         }
         updateZipFromAssets();
-        mainRunnable = new RunnableThread(new UnboundServiceCallback() {
+        mainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
             public void threadFinished() {
                 startUnboundAnchor();
@@ -111,7 +107,7 @@ public final class UnboundService extends Service {
         if (mainRunnable != null) {
             mainRunnable.interrupt();
         }
-        mainRunnable = new RunnableThread(new UnboundServiceCallback() {
+        mainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
             public void threadFinished() {
                 startUnbound();
@@ -125,7 +121,7 @@ public final class UnboundService extends Service {
         if (mainRunnable != null) {
             mainRunnable.interrupt();
         }
-        mainRunnable = new RunnableThread(new UnboundServiceCallback() {
+        mainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
             public void threadFinished() {
                 stop();

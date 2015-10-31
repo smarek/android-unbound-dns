@@ -39,7 +39,7 @@ public final class UnboundFragmentAdapter extends FragmentStatePagerAdapter {
             "Main Log",
             "Unbound Configuration",
             "Unbound Control",
-            "Unbound Check Conf",
+            "Unbound CheckConf",
             "Unbound Host Console"
     };
 

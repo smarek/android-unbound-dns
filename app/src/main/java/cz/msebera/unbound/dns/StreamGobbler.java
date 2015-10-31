@@ -9,12 +9,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 
 public final class StreamGobbler extends Thread {
     InputStream is;
     String type;
     PrintWriter outFilePrinter;
+
+    public StreamGobbler(InputStream is, String type, OutputStream outStream) {
+        this.is = is;
+        this.type = type;
+        this.outFilePrinter = new PrintWriter(outStream);
+    }
 
     public StreamGobbler(InputStream is, String type, File outFile) {
         this.is = is;

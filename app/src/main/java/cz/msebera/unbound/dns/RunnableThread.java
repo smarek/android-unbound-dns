@@ -19,6 +19,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.util.Map;
 
 public final class RunnableThread extends Thread {
@@ -30,9 +31,14 @@ public final class RunnableThread extends Thread {
     private final File binFile;
     private final String[] args;
     private final String TAG;
-    private final UnboundService.UnboundServiceCallback callback;
+    private final OutputStream outputStream;
+    private final RunnableThreadCallback callback;
 
-    public RunnableThread(UnboundService.UnboundServiceCallback callback, File workDir, String binName, String[] args, String libDir) {
+    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args, String libDir) {
+        this(callback, workDir, binName, args, libDir, null);
+    }
+
+    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args, String libDir, OutputStream output) {
         this.workDir = workDir;
         this.libDir = libDir;
         this.binFile = new File(workDir, "bin/" + binName);
@@ -40,6 +46,7 @@ public final class RunnableThread extends Thread {
         this.binDir = this.binFile.getParentFile();
         this.binDirPath = this.binDir.getAbsolutePath();
         this.callback = callback;
+        this.outputStream = output;
         this.args = args;
     }
 
@@ -81,7 +88,12 @@ public final class RunnableThread extends Thread {
         Process javap = null;
         try {
             javap = pb.start();
-            StreamGobbler inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, new File(binDir, "mainlog"));
+            StreamGobbler inputGobbler;
+            if (this.outputStream != null) {
+                inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, outputStream);
+            } else {
+                inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, new File(binDir, "mainlog"));
+            }
             inputGobbler.start();
             javap.waitFor();
             inputGobbler.interrupt();
@@ -95,5 +107,9 @@ public final class RunnableThread extends Thread {
         if (callback != null) {
             callback.threadFinished();
         }
+    }
+
+    public interface RunnableThreadCallback {
+        void threadFinished();
     }
 }

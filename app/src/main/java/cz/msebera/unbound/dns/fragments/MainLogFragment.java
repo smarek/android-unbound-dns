@@ -98,7 +98,7 @@ public final class MainLogFragment extends Fragment implements TailerListener {
         View v = inflater.inflate(R.layout.textview, container, false);
         textarea = (TextView) v.findViewById(R.id.textview);
         File logFile = new File(getActivity().getFilesDir(), "package/bin/mainlog");
-        Tailer.create(logFile, this, 400);
+        Tailer.create(logFile, this, 400, true);
         return v;
     }
 
