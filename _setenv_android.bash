@@ -6,7 +6,7 @@ error ( ) {
         exit 1
 }
 
-export _UNBOUND_NAME=unbound-1.5.4
+export _UNBOUND_NAME=unbound-1.5.6
 export _LIBEVENT_NAME=libevent-2.0.22-stable
 export _OPENSSL_NAME=openssl-1.0.2d
 export _EXPAT_NAME=expat-2.1.0

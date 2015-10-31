@@ -17,6 +17,7 @@ test ! -x build || mkdir build
 make -j4 depend
 make -j4
 make -j4 install_sw
+make -j4 install_sw
 cd ..
 
 # Update environment variables

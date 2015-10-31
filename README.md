@@ -5,7 +5,7 @@ Goal is to get Unbound DNS fully working with UI to configure it and system inte
 
 **Current State**:  
 
-I've managed to compile Unbound DNS in version 1.5.4 against OpenSSL 1.0.2d, LibEvent 2.0.22-stable and Expat 2.1.0, for ARMv7 (armv7 or armv71) platform
+I've managed to compile Unbound DNS in version 1.5.6 against OpenSSL 1.0.2d, LibEvent 2.0.22-stable and Expat 2.1.0, for ARMv7 (armv7 or armv71) platform
 
 
 **Step-By-Step Guide**:  
