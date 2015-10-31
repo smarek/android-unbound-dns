@@ -34,12 +34,17 @@ public final class UnboundService extends Service {
     public static final int REQUEST_STOP = 0xdead;
     public static final String ACTION_STOP = "stop";
     private boolean isForeground = false;
+    private boolean started = false;
     private RunnableThread mainRunnable;
 
     public final class UnboundServiceBinder extends Binder {
         UnboundService getService() {
             return UnboundService.this;
         }
+    }
+
+    public boolean isRunning() {
+        return isForeground;
     }
 
     public interface UnboundServiceCallback {
@@ -50,34 +55,47 @@ public final class UnboundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        goForeground();
-        updateZipFromAssets();
-        startUnboundControlSetup();
+        Log.d(TAG, "onStartCommand");
+        start();
         return START_NOT_STICKY;
     }
 
-    @Override
-    public void onDestroy() {
+    public void start() {
+        Log.d(TAG, "start");
+        goForeground();
+        startUnboundControlSetup();
+    }
+
+    public void stop() {
+        Log.d(TAG, "stop foreground");
         stopForeground(true);
+        isForeground = false;
+        if (mainRunnable != null && !mainRunnable.isInterrupted()) {
+            mainRunnable.interrupt();
+        }
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        Log.d(TAG, "onBind");
         if (ACTION_STOP.equalsIgnoreCase(intent.getAction())) {
-            Log.d(TAG, "stop foreground");
-            stopForeground(true);
-            isForeground = false;
-            return mBinder;
+            stop();
+        } else {
+            start();
         }
         return mBinder;
     }
 
-
     private void startUnboundControlSetup() {
+        Log.d(TAG, "startUnboundControlSetup");
         if (mainRunnable != null) {
+            if (started) {
+                return;
+            }
             mainRunnable.interrupt();
         }
+        updateZipFromAssets();
         mainRunnable = new RunnableThread(new UnboundServiceCallback() {
             @Override
             public void threadFinished() {
@@ -85,9 +103,11 @@ public final class UnboundService extends Service {
             }
         }, new File(getFilesDir(), "package"), "unbound-control-setup", null, "lib");
         mainRunnable.start();
+        started = true;
     }
 
     private void startUnboundAnchor() {
+        Log.d(TAG, "startUnboundAnchor");
         if (mainRunnable != null) {
             mainRunnable.interrupt();
         }
@@ -101,25 +121,28 @@ public final class UnboundService extends Service {
     }
 
     private void startUnbound() {
+        Log.d(TAG, "startUnbound");
         if (mainRunnable != null) {
             mainRunnable.interrupt();
         }
         mainRunnable = new RunnableThread(new UnboundServiceCallback() {
             @Override
             public void threadFinished() {
-                stopForeground(true);
+                stop();
             }
         }, new File(getFilesDir(), "package"), "unbound", new String[]{"-c", "unbound.conf"}, "lib");
         mainRunnable.start();
     }
 
     private void updateZipFromAssets() {
+        Log.d(TAG, "updateZipFromAssets");
         IOUtils.copyFile(getApplicationContext(), "package.zip");
         IOUtils.unzip(new File(getFilesDir(), "package.zip"), getFilesDir());
         IOUtils.createConfigFromDefault(getFilesDir());
     }
 
     private void goForeground() {
+        Log.d(TAG, "goForeground");
         if (isForeground) {
             return;
         }

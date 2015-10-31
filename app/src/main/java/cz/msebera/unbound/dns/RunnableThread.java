@@ -78,13 +78,10 @@ public final class RunnableThread extends Thread {
         env.put("PATH", env.get("PATH") + ":" + this.binDirPath);
         env.put("HOME", this.binDirPath);
         env.put("LD_LIBRARY_PATH", new File(workDir, libDir).getAbsolutePath());
-//        for (Map.Entry<String, String> envEntry : env.entrySet()) {
-//            Log.d(TAG, String.format("%s = %s", envEntry.getKey(), envEntry.getValue()));
-//        }
         Process javap = null;
         try {
             javap = pb.start();
-            StreamGobbler inputGobbler = new StreamGobbler(javap.getInputStream(), TAG);
+            StreamGobbler inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, new File(binDir, "mainlog"));
             inputGobbler.start();
             javap.waitFor();
             inputGobbler.interrupt();
@@ -95,7 +92,6 @@ public final class RunnableThread extends Thread {
                 javap.destroy();
             }
         }
-        Log.e(TAG, "Process ended");
         if (callback != null) {
             callback.threadFinished();
         }
