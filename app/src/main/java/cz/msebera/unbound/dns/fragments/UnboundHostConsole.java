@@ -38,7 +38,6 @@ import cz.msebera.unbound.dns.RunnableThread;
 
 public final class UnboundHostConsole extends Fragment {
 
-
     TextView textarea;
     TextView preCommand;
     EditText command;
@@ -57,8 +56,8 @@ public final class UnboundHostConsole extends Fragment {
         preCommand = (TextView) v.findViewById(R.id.withActionDefaultCommand);
         command = (EditText) v.findViewById(R.id.withActionCommandAppend);
 
-        textarea.setText("Click \"Check\" in Menu to run \"unbound-check-conf\"");
-        preCommand.setText("unbound-host -C unbound.conf");
+        textarea.setText("Click \"Check\" in Menu to run \"unbound-host\"");
+        preCommand.setText("unbound-host");
         command.setText("-v msebera.cz");
 
         return v;
