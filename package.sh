@@ -37,6 +37,9 @@ $_SED -i "1s/.*/#\!\/system\/bin\/sh/" package/bin/ssl/misc/c_info
 $_SED -i "1s/.*/#\!\/system\/bin\/sh/" package/bin/ssl/misc/c_issuer
 $_SED -i "1s/.*/#\!\/system\/bin\/sh/" package/bin/ssl/misc/c_name
 
+# Set binaries executable
 chmod +x package/bin/*
-
+# Create ZIP distribution package 
 zip -rq package.zip package
+# Copy ZIP over old one within Android sources
+test -x Android/app/src/main/assets || cp package.zip Android/app/src/main/assets/package.zip

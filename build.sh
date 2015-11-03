@@ -47,6 +47,6 @@ source _setenv_android.bash
 # Configure and build Unbound
 cd $_UNBOUND_NAME
 test ! -x build || mkdir build
-./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_NDK_SYSROOT --host=arm-linux-androideabi --with-ssl=`pwd`/../openssl-1.0.2d/build/ --with-libexpat=`pwd`/../expat-2.1.0/build/ --with-libevent=`pwd`/../libevent-2.0.22-stable/build/ --enable-checking --with-pthreads --with-pic --with-run-dir="." --with-pidfile="unbound.pid" --with-chroot-dir="." --with-conf-file="unbound.conf" --with-rootkey-file="root.key"
+./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_NDK_SYSROOT --host=arm-linux-androideabi --with-ssl=`pwd`/../openssl-1.0.2d/build/ --with-libexpat=`pwd`/../expat-2.1.0/build/ --with-libevent=`pwd`/../libevent-2.0.22-stable/build/ --enable-checking --with-pthreads --with-pic --with-run-dir="." --with-pidfile="unbound.pid" --with-chroot-dir="." --with-conf-file="unbound.conf" --with-rootkey-file="root.key" --disable-shared --disable-flto
 make -j4
 make -j4 install
