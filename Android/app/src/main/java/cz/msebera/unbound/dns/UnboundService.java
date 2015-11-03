@@ -33,21 +33,14 @@ public final class UnboundService extends Service {
     public static final int NOTIFICATION_ID = 0x31337;
     public static final int REQUEST_STOP = 0xdead;
     public static final String ACTION_STOP = "stop";
+    private final IBinder mBinder = new UnboundServiceBinder();
     private boolean isForeground = false;
     private boolean started = false;
     private RunnableThread mainRunnable;
 
-    public final class UnboundServiceBinder extends Binder {
-        UnboundService getService() {
-            return UnboundService.this;
-        }
-    }
-
     public boolean isRunning() {
         return isForeground;
     }
-
-    private final IBinder mBinder = new UnboundServiceBinder();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -98,7 +91,7 @@ public final class UnboundService extends Service {
             public void threadFinished() {
                 startUnboundAnchor();
             }
-        }, new File(getFilesDir(), "package"), "unbound-control-setup", null, "lib");
+        }, new File(getFilesDir(), "package"), "unbound-control-setup", new String[]{"-d", "."});
         mainRunnable.start();
         started = true;
     }
@@ -113,7 +106,7 @@ public final class UnboundService extends Service {
             public void threadFinished() {
                 startUnbound();
             }
-        }, new File(getFilesDir(), "package"), "unbound-anchor", new String[]{"-C", "unbound.conf", "-v"}, "lib");
+        }, new File(getFilesDir(), "package"), "unbound-anchor", new String[]{"-C", "unbound.conf", "-v"});
         mainRunnable.start();
     }
 
@@ -127,7 +120,7 @@ public final class UnboundService extends Service {
             public void threadFinished() {
                 stop();
             }
-        }, new File(getFilesDir(), "package"), "unbound", new String[]{"-c", "unbound.conf"}, "lib");
+        }, new File(getFilesDir(), "package"), "unbound", new String[]{"-c", "unbound.conf"});
         mainRunnable.start();
     }
 
@@ -166,5 +159,11 @@ public final class UnboundService extends Service {
         startForeground(NOTIFICATION_ID, notification);
         isForeground = true;
         Log.d(TAG, "start foreground");
+    }
+
+    public final class UnboundServiceBinder extends Binder {
+        UnboundService getService() {
+            return UnboundService.this;
+        }
     }
 }

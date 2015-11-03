@@ -27,20 +27,18 @@ public final class RunnableThread extends Thread {
     private final File workDir;
     private final File binDir;
     private final String binDirPath;
-    private final String libDir;
     private final File binFile;
     private final String[] args;
     private final String TAG;
     private final OutputStream outputStream;
     private final RunnableThreadCallback callback;
 
-    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args, String libDir) {
-        this(callback, workDir, binName, args, libDir, null);
+    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args) {
+        this(callback, workDir, binName, args, null);
     }
 
-    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args, String libDir, OutputStream output) {
+    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args, OutputStream output) {
         this.workDir = workDir;
-        this.libDir = libDir;
         this.binFile = new File(workDir, "bin/" + binName);
         this.TAG = "RunnableThread:" + binName;
         this.binDir = this.binFile.getParentFile();
@@ -84,7 +82,6 @@ public final class RunnableThread extends Thread {
         Map<String, String> env = pb.environment();
         env.put("PATH", env.get("PATH") + ":" + this.binDirPath);
         env.put("HOME", this.binDirPath);
-        env.put("LD_LIBRARY_PATH", new File(workDir, libDir).getAbsolutePath());
         Process javap = null;
         try {
             javap = pb.start();

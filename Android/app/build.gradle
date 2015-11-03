@@ -14,9 +14,9 @@ android {
     signingConfigs {
         release {
             storeFile file("release.keystore")
-            storePassword System.console().readLine("\nKeystore password: ")
+            storePassword System.console() == null ? "FIXME" : System.console().readLine("\nKeystore password: ")
             keyAlias "android_unbound"
-            keyPassword System.console().readLine("\nKey password: ")
+            keyPassword System.console() == null ? "FIXME" : System.console().readLine("\nKey password: ")
         }
     }
     buildTypes {
@@ -33,4 +33,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'commons-io:commons-io:2.4'
+    compile 'eu.chainfire:libsuperuser:1.0.0.+'
 }

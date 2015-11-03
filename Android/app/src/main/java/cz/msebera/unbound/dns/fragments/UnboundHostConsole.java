@@ -38,11 +38,23 @@ import cz.msebera.unbound.dns.RunnableThread;
 
 public final class UnboundHostConsole extends Fragment {
 
+    private static final int MENU_RUN = 0xbeef;
     TextView textarea;
     TextView preCommand;
     EditText command;
     RunnableThread mainRunnable;
-    private static final int MENU_RUN = 0xbeef;
+    private OutputStream textareaStream = new OutputStream() {
+
+        @Override
+        public void write(@NonNull byte[] buffer) throws IOException {
+            appendToTextArea(new String(buffer));
+        }
+
+        @Override
+        public void write(int oneByte) throws IOException {
+            appendToTextArea(String.valueOf((char) oneByte));
+        }
+    };
 
     public UnboundHostConsole() {
         setHasOptionsMenu(true);
@@ -62,19 +74,6 @@ public final class UnboundHostConsole extends Fragment {
 
         return v;
     }
-
-    private OutputStream textareaStream = new OutputStream() {
-
-        @Override
-        public void write(@NonNull byte[] buffer) throws IOException {
-            appendToTextArea(new String(buffer));
-        }
-
-        @Override
-        public void write(int oneByte) throws IOException {
-            appendToTextArea(String.valueOf((char) oneByte));
-        }
-    };
 
     private void appendToTextArea(final String text) {
         if (getActivity() == null) {
@@ -106,7 +105,7 @@ public final class UnboundHostConsole extends Fragment {
             mainRunnable = null;
         }
         String _command = "-C unbound.conf " + command.getText();
-        mainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-host", _command.split(" "), "lib", textareaStream);
+        mainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-host", _command.split(" "), textareaStream);
         textarea.setText("Command run: unbound-host " + _command + "\n");
         mainRunnable.start();
     }

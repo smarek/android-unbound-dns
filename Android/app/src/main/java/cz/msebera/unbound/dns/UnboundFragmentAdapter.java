@@ -20,6 +20,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import cz.msebera.unbound.dns.fragments.MainLogFragment;
+import cz.msebera.unbound.dns.fragments.SettingsFragment;
 import cz.msebera.unbound.dns.fragments.UnboundCheckConf;
 import cz.msebera.unbound.dns.fragments.UnboundConfiguration;
 import cz.msebera.unbound.dns.fragments.UnboundControlConsole;
@@ -29,6 +30,7 @@ public final class UnboundFragmentAdapter extends FragmentStatePagerAdapter {
 
     @SuppressWarnings("unchecked")
     private Class<? extends Fragment>[] fragments = new Class[]{
+            SettingsFragment.class,
             MainLogFragment.class,
             UnboundConfiguration.class,
             UnboundControlConsole.class,
@@ -36,6 +38,7 @@ public final class UnboundFragmentAdapter extends FragmentStatePagerAdapter {
             UnboundHostConsole.class
     };
     private String[] titles = new String[]{
+            "Settings",
             "Main Log",
             "Unbound Configuration",
             "Unbound Control",

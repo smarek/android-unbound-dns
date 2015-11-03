@@ -36,9 +36,21 @@ import cz.msebera.unbound.dns.RunnableThread;
 
 public final class UnboundCheckConf extends Fragment {
 
+    private static final int MENU_RUN = 0xbeef;
     TextView textarea;
     RunnableThread mainRunnable;
-    private static final int MENU_RUN = 0xbeef;
+    private OutputStream textareaStream = new OutputStream() {
+
+        @Override
+        public void write(@NonNull byte[] buffer) throws IOException {
+            appendToTextArea(new String(buffer));
+        }
+
+        @Override
+        public void write(int oneByte) throws IOException {
+            appendToTextArea(String.valueOf((char) oneByte));
+        }
+    };
 
     public UnboundCheckConf() {
         setHasOptionsMenu(true);
@@ -52,19 +64,6 @@ public final class UnboundCheckConf extends Fragment {
         textarea.setText("Click \"Check\" in Menu to run \"unbound-check-conf\"");
         return v;
     }
-
-    private OutputStream textareaStream = new OutputStream() {
-
-        @Override
-        public void write(@NonNull byte[] buffer) throws IOException {
-            appendToTextArea(new String(buffer));
-        }
-
-        @Override
-        public void write(int oneByte) throws IOException {
-            appendToTextArea(String.valueOf((char) oneByte));
-        }
-    };
 
     private void appendToTextArea(final String text) {
         if (getActivity() == null) {
@@ -95,7 +94,7 @@ public final class UnboundCheckConf extends Fragment {
             mainRunnable.interrupt();
             mainRunnable = null;
         }
-        mainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-checkconf", new String[]{"unbound.conf"}, "lib", textareaStream);
+        mainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-checkconf", new String[]{"unbound.conf"}, textareaStream);
         textarea.setText("");
         mainRunnable.start();
     }

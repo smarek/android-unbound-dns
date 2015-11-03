@@ -31,19 +31,11 @@ public final class MainActivity extends AppCompatActivity {
                     setCorrectButtonsText();
                     break;
                 case R.id.mainButtonReload:
-                    new RunnableThread(null, new File(getFilesDir(), "package"), "unbound-control", new String[]{"-c", "unbound.conf", "reload"}, "lib").start();
+                    new RunnableThread(null, new File(getFilesDir(), "package"), "unbound-control", new String[]{"-c", "unbound.conf", "reload"}).start();
                     break;
             }
         }
     };
-
-    private void setCorrectButtonsText() {
-        if (serviceBinder != null && serviceBinder.getService() != null) {
-            boolean running = serviceBinder.getService().isRunning();
-            btn_StartStop.setText(running ? "STOP UNBOUND" : "START UNBOUND");
-        }
-    }
-
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -58,6 +50,13 @@ public final class MainActivity extends AppCompatActivity {
             serviceBinder = null;
         }
     };
+
+    private void setCorrectButtonsText() {
+        if (serviceBinder != null && serviceBinder.getService() != null) {
+            boolean running = serviceBinder.getService().isRunning();
+            btn_StartStop.setText(running ? "STOP UNBOUND" : "START UNBOUND");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +81,7 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
+    protected void onResume() {
         super.onStart();
         startService(new Intent(this, UnboundService.class));
         bindService(new Intent(this, UnboundService.class), connection, BIND_AUTO_CREATE);
@@ -91,6 +90,8 @@ public final class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        unbindService(connection);
+        if (serviceBinder != null && connection != null) {
+            unbindService(connection);
+        }
     }
 }

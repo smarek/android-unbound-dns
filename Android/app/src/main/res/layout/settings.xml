@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+    android:layout_marginStart="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/settings_runas_root"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Run as Root (Allow to listen on port 53)" />
+
+    <CheckBox
+        android:id="@+id/settings_runon_boot"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Unbound service on Boot" />
+
+    <CheckBox
+        android:id="@+id/settings_override_wifi"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Use as default for WiFi Connectivity" />
+
+    <CheckBox
+        android:id="@+id/settings_override_cellular"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Use as default for Mobile Data Connectivity" />
+
+</LinearLayout>
