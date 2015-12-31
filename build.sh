@@ -4,7 +4,7 @@
 source _setenv_android.bash
 
 # clean build folders if env requires it
-test ! -n "$CLEAN_BEFORE_BUILD" || source build_clean.sh
+test -n "$CLEAN_BEFORE_BUILD" && source build_clean.sh || echo "TIP: set CLEAN_BEFORE_BUILD variable to run ./build_clean.sh before build"
 
 # Update environment variables
 export CC=gcc
@@ -13,11 +13,14 @@ export CC=gcc
 
 cd $_OPENSSL_NAME
 test ! -x build || mkdir build
-./Configure no-ssl2 no-ssl3 no-shared no-zlib no-comp no-hw -fPIC -pie -fpic --install_prefix=`pwd`/build/ --prefix=".//" --openssldir="ssl" android
-make -j4 depend
-make -j4
-make -j4 install_sw
-make -j4 install_sw
+echo "OpenSSL configure"
+./Configure no-ssl2 no-ssl3 no-shared no-zlib no-comp no-hw -fPIC -pie -fpic --install_prefix=`pwd`/build/ --prefix=".//" --openssldir="ssl" android &> configure.log
+echo "OpenSSL make"
+make -j4 depend &> make.depend.log
+make -j4 &> make.log
+echo "OpenSSL make install_sw"
+make -j4 install_sw &> make.install_sw.log
+make -j4 install_sw 2>&1 >> make.install_sw.log
 cd ..
 
 # Update environment variables
@@ -26,18 +29,24 @@ export CC=arm-linux-androideabi-gcc
 # Build Expat library (LibExpat)
 cd $_EXPAT_NAME
 test ! -x build || mkdir build
-./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --disable-shared
-make -j4
-make -j4 install
+echo "Expat configure"
+./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --disable-shared &> configure.log
+echo "Expat make"
+make -j4 &> make.log
+echo "Expat make install"
+make -j4 install &> make.install.log
 cd ..
 
 # Build Libevent
 export CFLAGS="--sysroot=$ANDROID_SYSROOT -pie -fPIE -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16"
 cd $_LIBEVENT_NAME
 test ! -x build || mkdir build
-./configure --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --prefix=`pwd`/build/ --disable-shared
-make -j4
-make -j4 install
+echo "LibEvent configure"
+./configure --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --prefix=`pwd`/build/ --disable-shared &> configure.log
+echo "LibEvent make"
+make -j4 &> make.log
+echo "LibEvent make install"
+make -j4 install &> make.install.log
 cd ..
 
 # setup environment
@@ -47,6 +56,12 @@ source _setenv_android.bash
 # Configure and build Unbound
 cd $_UNBOUND_NAME
 test ! -x build || mkdir build
-./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_NDK_SYSROOT --host=arm-linux-androideabi --with-ssl=`pwd`/../$_OPENSSL_NAME/build/ --with-libexpat=`pwd`/../expat-2.1.0/build/ --with-libevent=`pwd`/../libevent-2.0.22-stable/build/ --enable-checking --with-pthreads --with-pic --with-run-dir="." --with-pidfile="unbound.pid" --with-chroot-dir="." --with-conf-file="unbound.conf" --with-rootkey-file="root.key" --disable-shared --disable-flto
-make -j4
-make -j4 install
+echo "Unbound configure"
+./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_NDK_SYSROOT --host=arm-linux-androideabi --with-ssl=`pwd`/../$_OPENSSL_NAME/build/ --with-libexpat=`pwd`/../expat-2.1.0/build/ --with-libevent=`pwd`/../libevent-2.0.22-stable/build/ --enable-checking --with-pthreads --with-pic --with-run-dir="." --with-pidfile="unbound.pid" --with-chroot-dir="." --with-conf-file="unbound.conf" --with-rootkey-file="root.key" --disable-shared --disable-flto &> configure.log
+echo "Unbound make"
+make -j4 &> make.log
+echo "Unbound make install"
+make -j4 install &> make.install.log
+
+echo "Build finished"
+echo "TIP: Create deployment package by running ./package.sh"

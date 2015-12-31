@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Cleaning build folders\n"
+echo "Cleaning build folders"
 
 source _setenv_android.bash
 
