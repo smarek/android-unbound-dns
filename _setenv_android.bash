@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Local environment configuration, can be placed in .bash_profile (or .bashrc or whatever is bash using on your system)
+test -z "$LOCAL_ANDROID_NDK_HOME" && export LOCAL_ANDROID_NDK_HOME=""
+test -z "$LOCAL_ANDROID_NDK_HOST_PLATFORM" && export LOCAL_ANDROID_NDK_HOST_PLATFORM=""
+
 # functions:
 error ( ) {
         echo "$0 fatal error: $1"
@@ -16,15 +20,15 @@ export _LIBEVENT_URL="https://github.com/libevent/libevent/releases/download/rel
 export _OPENSSL_URL="https://www.openssl.org/source/openssl-1.0.2e.tar.gz"
 export _EXPAT_URL="http://kent.dl.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz"
 
-export ANDROID_NDK_HOME=""
-test -n "$ANDROID_NDK_HOME" || error "Fill your NDK HOME in _setenv_android.bash"
+export ANDROID_NDK_HOME="$LOCAL_ANDROID_NDK_HOME"
+test -n "$ANDROID_NDK_HOME" || error "Fill your NDK HOME in _setenv_android.bash (var LOCAL_ANDROID_NDK_HOME)"
 
 export ANDROID_NDK_PLATFORM=21
 export ANDROID_NDK_ARCH=arm
 export ANDROID_NDK_TARGET=arm-linux-androideabi-4.9
 
-export ANDROID_NDK_HOST_PLATFORM=""
-test -n "$ANDROID_NDK_HOST_PLATFORM" || error "fill in your host platform, ie. darwin-x86_64, in _setenv_android.bash"
+export ANDROID_NDK_HOST_PLATFORM="$LOCAL_ANDROID_NDK_HOST_PLATFORM"
+test -n "$ANDROID_NDK_HOST_PLATFORM" || error "fill in your host platform, ie. darwin-x86_64, in _setenv_android.bash (var LOCAL_ANDROID_NDK_HOST_PLATFORM)"
 
 export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
 export ANDROID_NDK_SYSROOT=$ANDROID_NDK_HOME/platforms/android-$ANDROID_NDK_PLATFORM/arch-$ANDROID_NDK_ARCH
