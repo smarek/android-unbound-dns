@@ -23,7 +23,7 @@ export ANDROID_NDK_PLATFORM=21
 export ANDROID_NDK_ARCH=arm
 export ANDROID_NDK_TARGET=arm-linux-androideabi-4.9
 
-export ANDROID_NDK_HOST_PLATFORM="darwin-x86_64"
+export ANDROID_NDK_HOST_PLATFORM=""
 test -n "$ANDROID_NDK_HOST_PLATFORM" || error "fill in your host platform, ie. darwin-x86_64, in _setenv_android.bash"
 
 export ANDROID_NDK_ROOT=$ANDROID_NDK_HOME
