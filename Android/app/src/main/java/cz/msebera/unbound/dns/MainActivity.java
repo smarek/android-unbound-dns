@@ -82,7 +82,7 @@ public final class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        super.onStart();
+        super.onResume();
         startService(new Intent(this, UnboundService.class));
         bindService(new Intent(this, UnboundService.class), connection, BIND_AUTO_CREATE);
     }
@@ -93,5 +93,6 @@ public final class MainActivity extends AppCompatActivity {
         if (serviceBinder != null && connection != null) {
             unbindService(connection);
         }
+        setCorrectButtonsText();
     }
 }

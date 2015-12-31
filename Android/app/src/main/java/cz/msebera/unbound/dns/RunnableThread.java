@@ -24,8 +24,8 @@ import java.util.Map;
 
 public final class RunnableThread extends Thread {
 
-    private final File workDir;
     private final File binDir;
+    private final String tmpDirPath;
     private final String binDirPath;
     private final File binFile;
     private final String[] args;
@@ -38,11 +38,11 @@ public final class RunnableThread extends Thread {
     }
 
     public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args, OutputStream output) {
-        this.workDir = workDir;
         this.binFile = new File(workDir, "bin/" + binName);
         this.TAG = "RunnableThread:" + binName;
         this.binDir = this.binFile.getParentFile();
         this.binDirPath = this.binDir.getAbsolutePath();
+        this.tmpDirPath = this.binDir.getAbsolutePath();
         this.callback = callback;
         this.outputStream = output;
         this.args = args;
@@ -80,6 +80,11 @@ public final class RunnableThread extends Thread {
         pb.redirectErrorStream(true);
         pb.directory(this.binDir);
         Map<String, String> env = pb.environment();
+        for (Map.Entry<String, String> e : env.entrySet()) {
+            Log.d(TAG, "ENV[" + e.getKey() + "] " + e.getValue());
+        }
+        env.put("TMP", this.tmpDirPath);
+        env.put("TEMP", this.tmpDirPath);
         env.put("PATH", env.get("PATH") + ":" + this.binDirPath);
         env.put("HOME", this.binDirPath);
         Process javap = null;
