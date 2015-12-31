@@ -1,18 +1,16 @@
 # Android Unbound DNS
 
+![Android Unbound DNS logo](https://raw.githubusercontent.com/smarek/android-unbound-dns/master/Android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png "Android application Logo")
+
 Goal is to get Unbound DNS fully working with UI to configure it and system integration (replacing system DNS)
-
-
-**Current State**:  
-
-I've managed to compile Unbound DNS in version 1.5.6 against OpenSSL 1.0.2d, LibEvent 2.0.22-stable and Expat 2.1.0, for ARMv7 (armv7 or armv71) platform
-
 
 **Step-By-Step Guide**:  
 
 Requirements:
 
   - Android NDK r10d
+  - Set environment variables according to your local paths
+    - required vars are LOCAL_ANDROID_NDK_HOME and LOCAL_ANDROID_NDK_HOST_PLATFORM, see _setenv_android.bash file for reference
   - Download Unbound and libraries into fetched repository
     - ./download.sh
   - Run cleanup (will remove old folders and unpack original archives)
