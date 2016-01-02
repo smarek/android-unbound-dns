@@ -12,14 +12,21 @@ android {
         versionName "1.0"
     }
     signingConfigs {
+        debug {
+        }
         release {
-            storeFile file("release.keystore")
-            storePassword System.console() == null ? "FIXME" : System.console().readLine("\nKeystore password: ")
-            keyAlias "android_unbound"
-            keyPassword System.console() == null ? "FIXME" : System.console().readLine("\nKey password: ")
+           storeFile file(System.env.ANDROID_UNBOUND_KEYSTORE == null ? "dummy.keystore" : System.env.ANDROID_UNBOUND_KEYSTORE)
+           storePassword System.env.ANDROID_UNBOUND_KEYSTORE_PASS == null ? "dummies" : System.env.ANDROID_UNBOUND_KEYSTORE_PASS
+           keyAlias System.env.ANDROID_UNBOUND_KEY_ALIAS == null ? "dummy" : System.env.ANDROID_UNBOUND_KEY_ALIAS
+           keyPassword System.env.ANDROID_UNBOUND_KEY_PASS == null ? "dummies" : System.env.ANDROID_UNBOUND_KEY_PASS
         }
     }
     buildTypes {
+        debug {
+           minifyEnabled false
+           proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+           signingConfig signingConfigs.debug
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
