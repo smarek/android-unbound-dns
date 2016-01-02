@@ -1,0 +1,44 @@
+language: android
+sudo: false
+jdk: openjdk7
+android:
+  components:
+    - tools
+    - build-tools-23.0.2
+    - extra-android-support
+    - extra-android-m2repository
+    - android-23
+  licenses:
+    - '.+'
+before_script:
+  - export TERM=dumb
+  - curl -L http://dl.google.com/android/ndk/android-ndk-r10e-linux-x86_64.bin -O
+  - chmod u+x android-ndk-r10e-linux-x86_64.bin
+  - ./android-ndk-r10e-linux-x86_64.bin > /dev/null
+  - rm android-ndk-r10e-linux-x86_64.bin
+  - export ANDROID_NDK_HOME=`pwd`/android-ndk-r10e
+  - export LOCAL_ANDROID_NDK_HOME="$ANDROID_NDK_HOME"
+  - export LOCAL_ANDROID_NDK_HOST_PLATFORM="linux-x86_64"
+  - export PATH=$PATH:${ANDROID_NDK_HOME}
+  - find $ANDROID_NDK_HOME -type d
+  - env
+  - pwd
+script:
+  - bash ./download.sh
+  - bash ./cleanup.sh
+  - bash ./build.sh
+  - bash ./package.sh
+  - cd Android
+  - ./gradlew clean assemble -q -S
+  - ./gradlew check -q -S
+after_script:
+  - cat app/build/outputs/lint-results.xml
+  - cd ..
+  - cat expat-2.1.0/config.log
+  - cat expat-2.1.0/configure.log
+  - cat expat-2.1.0/make.install.log
+  - cat expat-2.1.0/make.log
+  - cat openssl-1.0.2e/configure.log
+  - cat openssl-1.0.2e/make.depend.log
+  - cat openssl-1.0.2e/make.log
+  - cat openssl-1.0.2e/make.install_sw.log
