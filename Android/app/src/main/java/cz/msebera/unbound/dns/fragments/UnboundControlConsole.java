@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -37,13 +36,12 @@ import cz.msebera.unbound.dns.RunnableThread;
 
 public final class UnboundControlConsole extends Fragment {
 
-
     private static final int MENU_RUN = 0xbeef;
-    TextView textarea;
-    TextView preCommand;
-    EditText command;
-    RunnableThread mainRunnable;
-    private OutputStream textareaStream = new OutputStream() {
+    TextView mTextArea;
+    TextView mPreCommand;
+    EditText mCommand;
+    RunnableThread mMainRunnable;
+    private OutputStream mTextAreaOutputStream = new OutputStream() {
 
         @Override
         public void write(@NonNull byte[] buffer) throws IOException {
@@ -64,13 +62,13 @@ public final class UnboundControlConsole extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.textview_with_action, container, false);
-        textarea = (TextView) v.findViewById(R.id.textview);
-        preCommand = (TextView) v.findViewById(R.id.withActionDefaultCommand);
-        command = (EditText) v.findViewById(R.id.withActionCommandAppend);
+        mTextArea = (TextView) v.findViewById(R.id.textview);
+        mPreCommand = (TextView) v.findViewById(R.id.withActionDefaultCommand);
+        mCommand = (EditText) v.findViewById(R.id.withActionCommandAppend);
 
-        textarea.setText("Click \"Check\" in Menu to run \"unbound-control\" with your command");
-        preCommand.setText("unbound-control");
-        command.setText("status");
+        mTextArea.setText(R.string.control_console_click_check_to_run);
+        mPreCommand.setText(getString(R.string.filename_unbound_control));
+        mCommand.setText(R.string.control_console_command_status);
 
         return v;
     }
@@ -82,8 +80,8 @@ public final class UnboundControlConsole extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (textarea != null) {
-                    textarea.append(text);
+                if (mTextArea != null) {
+                    mTextArea.append(text);
                 }
             }
         });
@@ -100,19 +98,19 @@ public final class UnboundControlConsole extends Fragment {
     }
 
     private void runCheck() {
-        if (mainRunnable != null) {
-            mainRunnable.interrupt();
-            mainRunnable = null;
+        if (mMainRunnable != null) {
+            mMainRunnable.interrupt();
+            mMainRunnable = null;
         }
-        String _command = "-c unbound.conf " + command.getText();
-        mainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-control", _command.split(" "), textareaStream);
-        textarea.setText("Command run: unbound-control " + _command + "\n");
-        mainRunnable.start();
+        String _command = "-c " + getString(R.string.filename_unbound_conf) + " " + mCommand.getText();
+        mMainRunnable = new RunnableThread(null, getActivity(), getString(R.string.filename_unbound_control), _command.split(" "), mTextAreaOutputStream);
+        mTextArea.setText(String.format(getString(R.string.control_console_command_run), _command));
+        mMainRunnable.start();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(Menu.NONE, MENU_RUN, Menu.NONE, "Run Command").setIcon(android.R.drawable.ic_media_play)
+        menu.add(Menu.NONE, MENU_RUN, Menu.NONE, R.string.menu_run_command).setIcon(android.R.drawable.ic_media_play)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onCreateOptionsMenu(menu, inflater);
     }

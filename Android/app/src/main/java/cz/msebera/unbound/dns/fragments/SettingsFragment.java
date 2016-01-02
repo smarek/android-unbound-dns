@@ -32,30 +32,30 @@ import eu.chainfire.libsuperuser.Shell;
 
 public final class SettingsFragment extends Fragment {
 
-    private CheckBox root, boot, cell, wifi;
-    private SharedPreferences preferences;
+    private CheckBox mRoot, mBoot, mCell, mWifi;
+    private SharedPreferences mPreferences;
     private CheckBox.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             switch (buttonView.getId()) {
                 case R.id.settings_override_cellular:
-                    if (preferences != null) {
-                        preferences.edit().putBoolean(C.PREF_CELL, isChecked).apply();
+                    if (mPreferences != null) {
+                        mPreferences.edit().putBoolean(C.PREF_CELL, isChecked).apply();
                     }
                     break;
                 case R.id.settings_override_wifi:
-                    if (preferences != null) {
-                        preferences.edit().putBoolean(C.PREF_WIFI, isChecked).apply();
+                    if (mPreferences != null) {
+                        mPreferences.edit().putBoolean(C.PREF_WIFI, isChecked).apply();
                     }
                     break;
                 case R.id.settings_runas_root:
-                    if (preferences != null) {
-                        preferences.edit().putBoolean(C.PREF_ROOT, isChecked).apply();
+                    if (mPreferences != null) {
+                        mPreferences.edit().putBoolean(C.PREF_ROOT, isChecked).apply();
                     }
                     break;
                 case R.id.settings_runon_boot:
-                    if (preferences != null) {
-                        preferences.edit().putBoolean(C.PREF_BOOT, isChecked).apply();
+                    if (mPreferences != null) {
+                        mPreferences.edit().putBoolean(C.PREF_BOOT, isChecked).apply();
                     }
                     break;
             }
@@ -69,29 +69,29 @@ public final class SettingsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.settings, container, false);
-        root = (CheckBox) v.findViewById(R.id.settings_runas_root);
-        boot = (CheckBox) v.findViewById(R.id.settings_runon_boot);
-        wifi = (CheckBox) v.findViewById(R.id.settings_override_wifi);
-        cell = (CheckBox) v.findViewById(R.id.settings_override_cellular);
+        View mView = inflater.inflate(R.layout.settings, container, false);
+        mRoot = (CheckBox) mView.findViewById(R.id.settings_runas_root);
+        mBoot = (CheckBox) mView.findViewById(R.id.settings_runon_boot);
+        mWifi = (CheckBox) mView.findViewById(R.id.settings_override_wifi);
+        mCell = (CheckBox) mView.findViewById(R.id.settings_override_cellular);
 
-        root.setOnCheckedChangeListener(onCheckedChangeListener);
-        boot.setOnCheckedChangeListener(onCheckedChangeListener);
-        wifi.setOnCheckedChangeListener(onCheckedChangeListener);
-        cell.setOnCheckedChangeListener(onCheckedChangeListener);
-        return v;
+        mRoot.setOnCheckedChangeListener(onCheckedChangeListener);
+        mBoot.setOnCheckedChangeListener(onCheckedChangeListener);
+        mWifi.setOnCheckedChangeListener(onCheckedChangeListener);
+        mCell.setOnCheckedChangeListener(onCheckedChangeListener);
+        return mView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        if (preferences != null) {
-            root.setChecked(preferences.getBoolean(C.PREF_ROOT, false));
-            boot.setChecked(preferences.getBoolean(C.PREF_BOOT, true));
-            cell.setChecked(preferences.getBoolean(C.PREF_CELL, false));
-            wifi.setChecked(preferences.getBoolean(C.PREF_WIFI, false));
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (mPreferences != null) {
+            mRoot.setChecked(mPreferences.getBoolean(C.PREF_ROOT, false));
+            mBoot.setChecked(mPreferences.getBoolean(C.PREF_BOOT, true));
+            mCell.setChecked(mPreferences.getBoolean(C.PREF_CELL, false));
+            mWifi.setChecked(mPreferences.getBoolean(C.PREF_WIFI, false));
         }
-        root.setEnabled(Shell.SU.available());
+        mRoot.setEnabled(Shell.SU.available());
     }
 }

@@ -32,11 +32,11 @@ import java.util.zip.ZipInputStream;
 
 public class IOUtils {
 
-    public static void createConfigFromDefault(File directory) {
+    public static void createConfigFromDefault(File directory, Context ctx) {
         try {
-            File confFile = new File(directory, "package/bin/unbound.conf");
+            File confFile = new File(directory, ctx.getString(R.string.path_unbound_conf));
             if (!confFile.exists()) {
-                File defaultConfFile = new File(directory, "package/bin/unbound.conf.default");
+                File defaultConfFile = new File(directory, ctx.getString(R.string.path_unbound_conf_default));
                 if (defaultConfFile.exists()) {
                     FileChannel in = new FileInputStream(defaultConfFile).getChannel();
                     FileChannel out = new FileOutputStream(confFile).getChannel();

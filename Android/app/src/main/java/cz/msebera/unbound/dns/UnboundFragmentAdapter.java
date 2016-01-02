@@ -15,6 +15,7 @@
 */
 package cz.msebera.unbound.dns;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -29,7 +30,7 @@ import cz.msebera.unbound.dns.fragments.UnboundHostConsole;
 public final class UnboundFragmentAdapter extends FragmentStatePagerAdapter {
 
     @SuppressWarnings("unchecked")
-    private Class<? extends Fragment>[] fragments = new Class[]{
+    private final Class<? extends Fragment>[] fragments = new Class[]{
             SettingsFragment.class,
             MainLogFragment.class,
             UnboundConfiguration.class,
@@ -37,17 +38,18 @@ public final class UnboundFragmentAdapter extends FragmentStatePagerAdapter {
             UnboundCheckConf.class,
             UnboundHostConsole.class
     };
-    private String[] titles = new String[]{
-            "Settings",
-            "Main Log",
-            "Unbound Configuration",
-            "Unbound Control",
-            "Unbound CheckConf",
-            "Unbound Host Console"
-    };
+    private final String[] titles;
 
-    public UnboundFragmentAdapter(FragmentManager fm) {
+    public UnboundFragmentAdapter(FragmentManager fm, Context mContext) {
         super(fm);
+        titles = new String[]{
+                mContext.getString(R.string.fragment_title_settings),
+                mContext.getString(R.string.fragment_title_main_log),
+                mContext.getString(R.string.fragment_title_configuration),
+                mContext.getString(R.string.fragment_title_control),
+                mContext.getString(R.string.fragment_title_checkconf),
+                mContext.getString(R.string.fragment_title_host_console)
+        };
     }
 
     @Override

@@ -15,6 +15,7 @@
 */
 package cz.msebera.unbound.dns;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -24,53 +25,58 @@ import java.util.Map;
 
 public final class RunnableThread extends Thread {
 
-    private final File binDir;
-    private final String tmpDirPath;
-    private final String binDirPath;
-    private final File binFile;
-    private final String[] args;
+    private static final String DEFAULT_LOG_FILE_NAME = "mainlog";
+    private final File mBinDir;
+    private final String mTmpDirPath;
+    private final String mBinDirPath;
+    private final File mBinFile;
+    private final String[] mArgs;
     private final String TAG;
-    private final OutputStream outputStream;
-    private final RunnableThreadCallback callback;
+    private final OutputStream mOutputStream;
+    private final RunnableThreadCallback mCallback;
 
-    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args) {
-        this(callback, workDir, binName, args, null);
+    public RunnableThread(RunnableThreadCallback callback, Context context, String binName, String[] args) {
+        this(callback, new File(context.getFilesDir(), "package"), binName, args, null);
+    }
+
+    public RunnableThread(RunnableThreadCallback callback, Context context, String binName, String[] args, OutputStream output) {
+        this(callback, new File(context.getFilesDir(), "package"), binName, args, output);
     }
 
     public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args, OutputStream output) {
-        this.binFile = new File(workDir, "bin/" + binName);
+        this.mBinFile = new File(workDir, "bin/" + binName);
         this.TAG = "RunnableThread:" + binName;
-        this.binDir = this.binFile.getParentFile();
-        this.binDirPath = this.binDir.getAbsolutePath();
-        this.tmpDirPath = this.binDir.getAbsolutePath();
-        this.callback = callback;
-        this.outputStream = output;
-        this.args = args;
+        this.mBinDir = this.mBinFile.getParentFile();
+        this.mBinDirPath = this.mBinDir.getAbsolutePath();
+        this.mTmpDirPath = this.mBinDir.getAbsolutePath();
+        this.mCallback = callback;
+        this.mOutputStream = output;
+        this.mArgs = args;
     }
 
     @Override
     public void run() {
-        if (!binFile.exists()) {
-            Log.e(TAG, "Bin File does not exist: " + binFile.getAbsolutePath());
+        if (!mBinFile.exists()) {
+            Log.e(TAG, "Bin File does not exist: " + mBinFile.getAbsolutePath());
             return;
         }
-        if (!binFile.setExecutable(true, true)) {
-            Log.e(TAG, "Could not set the binary as executable: " + binFile.getAbsolutePath());
+        if (!mBinFile.setExecutable(true, true)) {
+            Log.e(TAG, "Could not set the binary as executable: " + mBinFile.getAbsolutePath());
             return;
         }
-        if (this.binDir.isDirectory()) {
-            for (File binary : this.binDir.listFiles()) {
+        if (this.mBinDir.isDirectory()) {
+            for (File binary : this.mBinDir.listFiles()) {
                 if (!binary.setExecutable(true)) {
                     Log.d(TAG, "Could not set the binary as executable: " + binary.getAbsolutePath());
                 }
             }
         }
 
-        String[] launch = new String[1 + (args == null ? 0 : args.length)];
-        launch[0] = binFile.getAbsolutePath();
-        if (args != null) {
+        String[] launch = new String[1 + (mArgs == null ? 0 : mArgs.length)];
+        launch[0] = mBinFile.getAbsolutePath();
+        if (mArgs != null) {
             int i = 1;
-            for (String arg : args) {
+            for (String arg : mArgs) {
                 launch[i] = arg;
                 i++;
             }
@@ -78,36 +84,36 @@ public final class RunnableThread extends Thread {
         Log.d(TAG, "Launch command: " + TextUtils.join(" ", launch));
         ProcessBuilder pb = new ProcessBuilder(launch);
         pb.redirectErrorStream(true);
-        pb.directory(this.binDir);
+        pb.directory(this.mBinDir);
         Map<String, String> env = pb.environment();
         for (Map.Entry<String, String> e : env.entrySet()) {
             Log.d(TAG, "ENV[" + e.getKey() + "] " + e.getValue());
         }
-        env.put("TMP", this.tmpDirPath);
-        env.put("TEMP", this.tmpDirPath);
-        env.put("PATH", env.get("PATH") + ":" + this.binDirPath);
-        env.put("HOME", this.binDirPath);
+        env.put("TMP", this.mTmpDirPath);
+        env.put("TEMP", this.mTmpDirPath);
+        env.put("PATH", env.get("PATH") + ":" + this.mBinDirPath);
+        env.put("HOME", this.mBinDirPath);
         Process javap = null;
         try {
             javap = pb.start();
             StreamGobbler inputGobbler;
-            if (this.outputStream != null) {
-                inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, outputStream);
+            if (this.mOutputStream != null) {
+                inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, mOutputStream);
             } else {
-                inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, new File(binDir, "mainlog"));
+                inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, new File(mBinDir, DEFAULT_LOG_FILE_NAME));
             }
             inputGobbler.start();
             javap.waitFor();
             inputGobbler.interrupt();
         } catch (Throwable t) {
-            Log.e(TAG, "Error while executing", t);
+            Log.e(TAG, t.getMessage(), t);
         } finally {
             if (javap != null) {
                 javap.destroy();
             }
         }
-        if (callback != null) {
-            callback.threadFinished();
+        if (mCallback != null) {
+            mCallback.threadFinished();
         }
     }
 

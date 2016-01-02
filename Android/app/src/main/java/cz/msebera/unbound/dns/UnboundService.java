@@ -32,43 +32,39 @@ public final class UnboundService extends Service {
     public static final String TAG = "UNBOUND_DNS";
     public static final int NOTIFICATION_ID = 0x31337;
     public static final int REQUEST_STOP = 0xdead;
-    public static final String ACTION_STOP = "stop";
+    public static final String ACTION_STOP = "action_service_stop";
     private final IBinder mBinder = new UnboundServiceBinder();
-    private boolean isForeground = false;
-    private boolean started = false;
-    private RunnableThread mainRunnable;
+    private boolean mIsForeground = false;
+    private boolean mIsStarted = false;
+    private RunnableThread mMainRunnable;
 
     public boolean isRunning() {
-        return isForeground;
+        return mIsForeground;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand");
         start();
         return START_NOT_STICKY;
     }
 
     public void start() {
-        Log.d(TAG, "start");
         goForeground();
         startUnboundControlSetup();
     }
 
     public void stop() {
-        Log.d(TAG, "stop foreground");
         stopForeground(true);
-        isForeground = false;
-        if (mainRunnable != null && !mainRunnable.isInterrupted()) {
-            mainRunnable.interrupt();
+        mIsForeground = false;
+        if (mMainRunnable != null && !mMainRunnable.isInterrupted()) {
+            mMainRunnable.interrupt();
         }
-        started = false;
+        mIsStarted = false;
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind");
         if (ACTION_STOP.equalsIgnoreCase(intent.getAction())) {
             stop();
         } else {
@@ -78,62 +74,58 @@ public final class UnboundService extends Service {
     }
 
     private void startUnboundControlSetup() {
-        Log.d(TAG, "startUnboundControlSetup");
-        if (mainRunnable != null) {
-            if (started) {
+        if (mMainRunnable != null) {
+            if (mIsStarted) {
                 return;
             }
-            mainRunnable.interrupt();
+            mMainRunnable.interrupt();
         }
         updateZipFromAssets();
-        mainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
+        mMainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
             public void threadFinished() {
                 startUnboundAnchor();
             }
-        }, new File(getFilesDir(), "package"), "unbound-control-setup", new String[]{"-d", "."});
-        mainRunnable.start();
-        started = true;
+        }, this, getString(R.string.filename_unbound_control_setup), new String[]{"-d", "."});
+        mMainRunnable.start();
+        mIsStarted = true;
     }
 
     private void startUnboundAnchor() {
-        Log.d(TAG, "startUnboundAnchor");
-        if (mainRunnable != null) {
-            mainRunnable.interrupt();
+        if (mMainRunnable != null) {
+            mMainRunnable.interrupt();
         }
-        mainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
+        mMainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
             public void threadFinished() {
                 startUnbound();
             }
-        }, new File(getFilesDir(), "package"), "unbound-anchor", new String[]{"-C", "unbound.conf", "-v"});
-        mainRunnable.start();
+        }, this, getString(R.string.filename_unbound_anchor), new String[]{"-C", getString(R.string.filename_unbound_conf), "-v"});
+        mMainRunnable.start();
     }
 
     private void startUnbound() {
-        Log.d(TAG, "startUnbound");
-        if (mainRunnable != null) {
-            mainRunnable.interrupt();
+        if (mMainRunnable != null) {
+            mMainRunnable.interrupt();
         }
-        mainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
+        mMainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
             public void threadFinished() {
                 stop();
             }
-        }, new File(getFilesDir(), "package"), "unbound", new String[]{"-c", "unbound.conf"});
-        mainRunnable.start();
+        }, this, getString(R.string.filename_unbound), new String[]{"-c", getString(R.string.filename_unbound_conf)});
+        mMainRunnable.start();
     }
 
     private void updateZipFromAssets() {
         Log.d(TAG, "updateZipFromAssets");
-        IOUtils.copyFile(getApplicationContext(), "package.zip");
-        IOUtils.unzip(new File(getFilesDir(), "package.zip"), getFilesDir());
-        IOUtils.createConfigFromDefault(getFilesDir());
+        IOUtils.copyFile(getApplicationContext(), getString(R.string.filename_package_zip));
+        IOUtils.unzip(new File(getFilesDir(), getString(R.string.filename_package_zip)), getFilesDir());
+        IOUtils.createConfigFromDefault(getFilesDir(), this);
     }
 
     private void goForeground() {
-        Log.d(TAG, "goForeground");
-        if (isForeground) {
+        if (mIsForeground) {
             return;
         }
 
@@ -146,10 +138,10 @@ public final class UnboundService extends Service {
                         PendingIntent.FLAG_ONE_SHOT
                 );
         NotificationCompat.Action stopAction = new NotificationCompat.Action
-                .Builder(android.R.drawable.ic_media_pause, "Stop", stopPendingIntent)
+                .Builder(android.R.drawable.ic_media_pause, getString(R.string.menu_stop), stopPendingIntent)
                 .build();
         Notification notification = new NotificationCompat.Builder(getApplicationContext())
-                .setContentTitle("Unbound DNS")
+                .setContentTitle(getString(R.string.app_name))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .addAction(stopAction)
                 .setWhen(System.currentTimeMillis())
@@ -157,8 +149,7 @@ public final class UnboundService extends Service {
                 .setOngoing(true)
                 .build();
         startForeground(NOTIFICATION_ID, notification);
-        isForeground = true;
-        Log.d(TAG, "start foreground");
+        mIsForeground = true;
     }
 
     public final class UnboundServiceBinder extends Binder {

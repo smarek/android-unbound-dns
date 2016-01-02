@@ -39,11 +39,11 @@ import cz.msebera.unbound.dns.RunnableThread;
 public final class UnboundHostConsole extends Fragment {
 
     private static final int MENU_RUN = 0xbeef;
-    TextView textarea;
-    TextView preCommand;
-    EditText command;
-    RunnableThread mainRunnable;
-    private OutputStream textareaStream = new OutputStream() {
+    TextView mTextArea;
+    TextView mPreCommand;
+    EditText mCommand;
+    RunnableThread mMainRunnable;
+    private OutputStream mTextAreaOutputStream = new OutputStream() {
 
         @Override
         public void write(@NonNull byte[] buffer) throws IOException {
@@ -64,13 +64,13 @@ public final class UnboundHostConsole extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.textview_with_action, container, false);
-        textarea = (TextView) v.findViewById(R.id.textview);
-        preCommand = (TextView) v.findViewById(R.id.withActionDefaultCommand);
-        command = (EditText) v.findViewById(R.id.withActionCommandAppend);
+        mTextArea = (TextView) v.findViewById(R.id.textview);
+        mPreCommand = (TextView) v.findViewById(R.id.withActionDefaultCommand);
+        mCommand = (EditText) v.findViewById(R.id.withActionCommandAppend);
 
-        textarea.setText("Click \"Check\" in Menu to run \"unbound-host\"");
-        preCommand.setText("unbound-host");
-        command.setText("-v msebera.cz");
+        mTextArea.setText(R.string.host_console_click_check_to_run);
+        mPreCommand.setText(R.string.filename_unbound_host);
+        mCommand.setText(R.string.host_console_default_arg);
 
         return v;
     }
@@ -82,8 +82,8 @@ public final class UnboundHostConsole extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (textarea != null) {
-                    textarea.append(text);
+                if (mTextArea != null) {
+                    mTextArea.append(text);
                 }
             }
         });
@@ -100,14 +100,14 @@ public final class UnboundHostConsole extends Fragment {
     }
 
     private void runCheck() {
-        if (mainRunnable != null) {
-            mainRunnable.interrupt();
-            mainRunnable = null;
+        if (mMainRunnable != null) {
+            mMainRunnable.interrupt();
+            mMainRunnable = null;
         }
-        String _command = "-C unbound.conf " + command.getText();
-        mainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-host", _command.split(" "), textareaStream);
-        textarea.setText("Command run: unbound-host " + _command + "\n");
-        mainRunnable.start();
+        String _command = "-C " + getString(R.string.filename_unbound_conf) + " " + mCommand.getText();
+        mMainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-host", _command.split(" "), mTextAreaOutputStream);
+        mTextArea.setText(String.format(getString(R.string.host_console_command_run), _command));
+        mMainRunnable.start();
     }
 
     @Override

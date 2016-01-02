@@ -1,3 +1,53 @@
 <resources>
     <string name="app_name">Secure DNS</string>
+
+    <string name="settings_run_as_root">Run as Root (Allow to listen on port 53)</string>
+    <string name="settings_run_on_boot">Start Unbound service on Boot</string>
+    <string name="settings_override_wifi">Use as default for WiFi Connectivity</string>
+    <string name="settings_override_cellular">Use as default for Mobile Data Connectivity</string>
+
+    <string name="path_unbound_conf" translatable="false">package/bin/unbound.conf</string>
+    <string name="path_unbound_conf_default" translatable="false">package/bin/unbound.conf.default</string>
+    <string name="path_mainlog" translatable="false">package/bin/mainlog</string>
+    <string name="filename_unbound" translatable="false">unbound</string>
+    <string name="filename_package_zip" translatable="false">package.zip</string>
+    <string name="filename_unbound_conf" translatable="false">unbound.conf</string>
+    <string name="filename_unbound_checkconf" translatable="false">unbound-checkconf</string>
+    <string name="filename_unbound_control" translatable="false">unbound-control</string>
+    <string name="filename_unbound_anchor" translatable="false">unbound-anchor</string>
+    <string name="filename_unbound_control_setup" translatable="false">unbound-control-setup</string>
+    <string name="filename_unbound_host" translatable="false">unbound-host</string>
+
+    <string name="host_console_default_arg" translatable="false">-v unbound.net</string>
+
+    <string name="checkconf_click_check_to_run">Click \"Check\" in Menu to run \"unbound-check-conf\"</string>
+    <string name="control_console_click_check_to_run">Click \"Check\" in Menu to run \"unbound-control\" with your command</string>
+    <string name="host_console_click_check_to_run">Click \"Check\" in Menu to run \"unbound-host\"</string>
+
+    <string name="checkconf_console_command_run">Command run: unbound-checkconf %s\n</string>
+    <string name="control_console_command_run">Command run: unbound-control %s\n</string>
+    <string name="host_console_command_run">Command run: unbound-host %s\n</string>
+
+    <string name="menu_clear">Clear</string>
+    <string name="menu_run_command">Run Command</string>
+    <string name="menu_stop">Stop</string>
+    <string name="menu_save_changes">Save Changes</string>
+    <string name="checkconf_menu_run_check">Run Check</string>
+    <string name="mainlog_menu_truncate_log">Remove Log File Contents</string>
+
+    <string name="error_cannot_write_unbound_conf">Cannot write into unbound.conf</string>
+    <string name="error_logfile_not_found">Logfile cannot be found \n</string>
+
+    <string name="configuration_saved">New Configuration Saved</string>
+    <string name="stop_unbound">STOP UNBOUND</string>
+    <string name="start_unbound">START UNBOUND</string>
+    <string name="control_console_command_status">status</string>
+    <string name="mainlog_logfile_rotated">Logfile rotated \n</string>
+
+    <string name="fragment_title_settings">Settings</string>
+    <string name="fragment_title_main_log">Main Log</string>
+    <string name="fragment_title_configuration">Unbound Configuration</string>
+    <string name="fragment_title_control">Unbound Control</string>
+    <string name="fragment_title_checkconf">Unbound CheckConf</string>
+    <string name="fragment_title_host_console">Unbound Host Console</string>
 </resources>

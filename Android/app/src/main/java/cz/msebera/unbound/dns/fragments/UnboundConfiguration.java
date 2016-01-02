@@ -40,7 +40,7 @@ public final class UnboundConfiguration extends Fragment {
 
     private static final int MENU_SAVE = 0xade;
     private static final String TAG = "UnboundConfiguration";
-    TextView textarea;
+    TextView mTextArea;
 
     public UnboundConfiguration() {
         setHasOptionsMenu(true);
@@ -49,36 +49,36 @@ public final class UnboundConfiguration extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.textarea, container, false);
-        textarea = (TextView) v.findViewById(R.id.textarea);
-        textarea.clearFocus();
+        View mView = inflater.inflate(R.layout.textarea, container, false);
+        mTextArea = (TextView) mView.findViewById(R.id.textarea);
+        mTextArea.clearFocus();
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(getActivity().getFilesDir(), "package/bin/unbound.conf")));
             String line;
             while ((line = br.readLine()) != null) {
-                textarea.append(line);
-                textarea.append("\n");
+                mTextArea.append(line);
+                mTextArea.append("\n");
             }
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        return v;
+        return mView;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_SAVE:
-                if (textarea == null) {
+                if (mTextArea == null) {
                     break;
                 }
                 try {
-                    FileWriter fw = new FileWriter(new File(getActivity().getFilesDir(), "package/bin/unbound.conf"), false);
-                    fw.write(textarea.getText().toString());
+                    FileWriter fw = new FileWriter(new File(getActivity().getFilesDir(), getString(R.string.path_unbound_conf)), false);
+                    fw.write(mTextArea.getText().toString());
                     fw.close();
-                    Toast.makeText(getActivity(), "New Configuration Saved", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.configuration_saved, Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
-                    Log.e(TAG, "Cannot write into unbound.conf", e);
+                    Log.e(TAG, getString(R.string.error_cannot_write_unbound_conf), e);
                 }
                 return true;
         }
@@ -87,7 +87,9 @@ public final class UnboundConfiguration extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(Menu.NONE, MENU_SAVE, Menu.NONE, "Save Changes").setIcon(android.R.drawable.ic_menu_save).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(Menu.NONE, MENU_SAVE, Menu.NONE, R.string.menu_save_changes)
+                .setIcon(android.R.drawable.ic_menu_save)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onCreateOptionsMenu(menu, inflater);
     }
 }

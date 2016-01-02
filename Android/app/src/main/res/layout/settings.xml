@@ -12,24 +12,24 @@
         android:id="@+id/settings_runas_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Run as Root (Allow to listen on port 53)" />
+        android:text="@string/settings_run_as_root" />
 
     <CheckBox
         android:id="@+id/settings_runon_boot"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Start Unbound service on Boot" />
+        android:text="@string/settings_run_on_boot" />
 
     <CheckBox
         android:id="@+id/settings_override_wifi"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Use as default for WiFi Connectivity" />
+        android:text="@string/settings_override_wifi" />
 
     <CheckBox
         android:id="@+id/settings_override_cellular"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Use as default for Mobile Data Connectivity" />
+        android:text="@string/settings_override_cellular" />
 
 </LinearLayout>

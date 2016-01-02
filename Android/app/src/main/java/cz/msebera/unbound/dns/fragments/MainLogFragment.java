@@ -42,7 +42,7 @@ public final class MainLogFragment extends Fragment implements TailerListener {
     static final String TAG = "MainLogFragment";
     static final int MENU_CLEAR = 0xfab;
     static final int MENU_EMPTY = 0xbaf;
-    TextView textarea;
+    TextView mTextArea;
 
     public MainLogFragment() {
         setHasOptionsMenu(true);
@@ -54,21 +54,21 @@ public final class MainLogFragment extends Fragment implements TailerListener {
 
     @Override
     public void fileNotFound() {
-        if (textarea != null) {
-            appendToTextArea("Logfile cannot be found \n");
+        if (mTextArea != null) {
+            appendToTextArea(getString(R.string.error_logfile_not_found));
         }
     }
 
     @Override
     public void fileRotated() {
-        if (textarea != null) {
-            appendToTextArea("Logfile rotated \n");
+        if (mTextArea != null) {
+            appendToTextArea(getString(R.string.mainlog_logfile_rotated));
         }
     }
 
     @Override
     public void handle(String line) {
-        if (textarea != null) {
+        if (mTextArea != null) {
             appendToTextArea(line + "\n");
         }
     }
@@ -80,8 +80,8 @@ public final class MainLogFragment extends Fragment implements TailerListener {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (textarea != null) {
-                    textarea.append(text);
+                if (mTextArea != null) {
+                    mTextArea.append(text);
                 }
             }
         });
@@ -89,15 +89,15 @@ public final class MainLogFragment extends Fragment implements TailerListener {
 
     @Override
     public void handle(Exception ex) {
-        Log.e(TAG, "handle Exception", ex);
+        Log.e(TAG, ex.getMessage(), ex);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.textview, container, false);
-        textarea = (TextView) v.findViewById(R.id.textview);
-        File logFile = new File(getActivity().getFilesDir(), "package/bin/mainlog");
+        mTextArea = (TextView) v.findViewById(R.id.textview);
+        File logFile = new File(getActivity().getFilesDir(), getString(R.string.path_mainlog));
         Tailer.create(logFile, this, 400, true);
         return v;
     }
@@ -107,15 +107,15 @@ public final class MainLogFragment extends Fragment implements TailerListener {
         switch (item.getItemId()) {
             case MENU_EMPTY:
                 try {
-                    FileWriter fw = new FileWriter(new File(getActivity().getFilesDir(), "package/bin/unbound.conf"), false);
+                    FileWriter fw = new FileWriter(new File(getActivity().getFilesDir(), getString(R.string.path_unbound_conf)), false);
                     fw.write("");
                     fw.close();
-                    Toast.makeText(getActivity(), "New Configuration Saved", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.configuration_saved, Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
-                    Log.e(TAG, "Cannot write into unbound.conf", e);
+                    Log.e(TAG, getString(R.string.error_cannot_write_unbound_conf), e);
                 }
             case MENU_CLEAR:
-                textarea.setText("");
+                mTextArea.setText("");
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -123,9 +123,9 @@ public final class MainLogFragment extends Fragment implements TailerListener {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(Menu.NONE, MENU_CLEAR, Menu.NONE, "Clear").setIcon(android.R.drawable.ic_menu_close_clear_cancel)
+        menu.add(Menu.NONE, MENU_CLEAR, Menu.NONE, R.string.menu_clear).setIcon(android.R.drawable.ic_menu_close_clear_cancel)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        menu.add(Menu.NONE, MENU_EMPTY, Menu.NONE, "Remove Log File Contents")
+        menu.add(Menu.NONE, MENU_EMPTY, Menu.NONE, R.string.mainlog_menu_truncate_log)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         super.onCreateOptionsMenu(menu, inflater);
     }

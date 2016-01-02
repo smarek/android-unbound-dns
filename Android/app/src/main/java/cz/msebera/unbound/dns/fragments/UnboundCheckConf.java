@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -37,9 +36,9 @@ import cz.msebera.unbound.dns.RunnableThread;
 public final class UnboundCheckConf extends Fragment {
 
     private static final int MENU_RUN = 0xbeef;
-    TextView textarea;
-    RunnableThread mainRunnable;
-    private OutputStream textareaStream = new OutputStream() {
+    TextView mTextArea;
+    RunnableThread mMainRunnable;
+    private OutputStream mTextAreaOutputStream = new OutputStream() {
 
         @Override
         public void write(@NonNull byte[] buffer) throws IOException {
@@ -60,8 +59,8 @@ public final class UnboundCheckConf extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.textview, container, false);
-        textarea = (TextView) v.findViewById(R.id.textview);
-        textarea.setText("Click \"Check\" in Menu to run \"unbound-check-conf\"");
+        mTextArea = (TextView) v.findViewById(R.id.textview);
+        mTextArea.setText(R.string.checkconf_click_check_to_run);
         return v;
     }
 
@@ -72,8 +71,8 @@ public final class UnboundCheckConf extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (textarea != null) {
-                    textarea.append(text);
+                if (mTextArea != null) {
+                    mTextArea.append(text);
                 }
             }
         });
@@ -90,18 +89,18 @@ public final class UnboundCheckConf extends Fragment {
     }
 
     private void runCheck() {
-        if (mainRunnable != null) {
-            mainRunnable.interrupt();
-            mainRunnable = null;
+        if (mMainRunnable != null) {
+            mMainRunnable.interrupt();
+            mMainRunnable = null;
         }
-        mainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-checkconf", new String[]{"unbound.conf"}, textareaStream);
-        textarea.setText("");
-        mainRunnable.start();
+        mMainRunnable = new RunnableThread(null, getActivity(), getString(R.string.filename_unbound_checkconf), new String[]{getString(R.string.filename_unbound_conf)}, mTextAreaOutputStream);
+        mTextArea.setText(String.format(getString(R.string.checkconf_console_command_run), getString(R.string.filename_unbound_conf)));
+        mMainRunnable.start();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(Menu.NONE, MENU_RUN, Menu.NONE, "Run Check").setIcon(android.R.drawable.ic_media_play)
+        menu.add(Menu.NONE, MENU_RUN, Menu.NONE, R.string.checkconf_menu_run_check).setIcon(android.R.drawable.ic_media_play)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onCreateOptionsMenu(menu, inflater);
     }
