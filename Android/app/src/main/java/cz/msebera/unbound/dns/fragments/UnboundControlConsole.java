@@ -103,7 +103,7 @@ public final class UnboundControlConsole extends Fragment {
             mMainRunnable = null;
         }
         String _command = "-c " + getString(R.string.filename_unbound_conf) + " " + mCommand.getText();
-        mMainRunnable = new RunnableThread(null, getActivity(), getString(R.string.filename_unbound_control), _command.split(" "), mTextAreaOutputStream);
+        mMainRunnable = new RunnableThread(null, getActivity(), getString(R.string.filename_unbound_control), false, _command.split(" "), mTextAreaOutputStream);
         mTextArea.setText(String.format(getString(R.string.control_console_command_run), _command));
         mMainRunnable.start();
     }

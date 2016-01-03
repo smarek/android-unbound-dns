@@ -29,7 +29,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -105,14 +104,14 @@ public final class UnboundHostConsole extends Fragment {
             mMainRunnable = null;
         }
         String _command = "-C " + getString(R.string.filename_unbound_conf) + " " + mCommand.getText();
-        mMainRunnable = new RunnableThread(null, new File(getActivity().getFilesDir(), "package"), "unbound-host", _command.split(" "), mTextAreaOutputStream);
+        mMainRunnable = new RunnableThread(null, getActivity(), getString(R.string.filename_unbound_host), false, _command.split(" "), mTextAreaOutputStream);
         mTextArea.setText(String.format(getString(R.string.host_console_command_run), _command));
         mMainRunnable.start();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(Menu.NONE, MENU_RUN, Menu.NONE, "Run Command").setIcon(android.R.drawable.ic_media_play)
+        menu.add(Menu.NONE, MENU_RUN, Menu.NONE, R.string.menu_run_command).setIcon(android.R.drawable.ic_media_play)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         super.onCreateOptionsMenu(menu, inflater);
     }

@@ -43,5 +43,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'commons-io:commons-io:2.4'
-    compile 'eu.chainfire:libsuperuser:1.0.0.201510071325'
+    compile 'com.github.Stericson:RootShell:d708ae1f0a'
 }

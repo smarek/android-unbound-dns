@@ -18,6 +18,7 @@ apply plugin: "com.dorongold.task-tree"
 allprojects {
     repositories {
         jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 

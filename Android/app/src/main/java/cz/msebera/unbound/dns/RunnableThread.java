@@ -16,42 +16,71 @@
 package cz.msebera.unbound.dns;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
+import com.stericson.RootShell.RootShell;
+import com.stericson.RootShell.exceptions.RootDeniedException;
+import com.stericson.RootShell.execution.Command;
+import com.stericson.RootShell.execution.Shell;
+
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 public final class RunnableThread extends Thread {
 
     private static final String DEFAULT_LOG_FILE_NAME = "mainlog";
     private final File mBinDir;
-    private final String mTmpDirPath;
     private final String mBinDirPath;
     private final File mBinFile;
+    private final boolean mRunAsRoot;
     private final String[] mArgs;
     private final String TAG;
-    private final OutputStream mOutputStream;
+    private final PrintWriter mOutputWriter;
     private final RunnableThreadCallback mCallback;
+    private boolean mFinishedFired = false;
 
     public RunnableThread(RunnableThreadCallback callback, Context context, String binName, String[] args) {
-        this(callback, new File(context.getFilesDir(), "package"), binName, args, null);
+        this(callback, new File(context.getFilesDir(), "package"), binName, false, args, null);
     }
 
-    public RunnableThread(RunnableThreadCallback callback, Context context, String binName, String[] args, OutputStream output) {
-        this(callback, new File(context.getFilesDir(), "package"), binName, args, output);
+    public RunnableThread(RunnableThreadCallback callback, Context context, String binName, boolean runAsRoot, String[] args) {
+        this(callback, new File(context.getFilesDir(), "package"), binName, runAsRoot, args, null);
     }
 
-    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, String[] args, OutputStream output) {
+    public RunnableThread(RunnableThreadCallback callback, Context context, String binName, boolean runAsRoot, String[] args, OutputStream output) {
+        this(callback, new File(context.getFilesDir(), "package"), binName, runAsRoot, args, output);
+    }
+
+    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, boolean runAsRoot, String[] args, OutputStream output) {
         this.mBinFile = new File(workDir, "bin/" + binName);
         this.TAG = "RunnableThread:" + binName;
         this.mBinDir = this.mBinFile.getParentFile();
         this.mBinDirPath = this.mBinDir.getAbsolutePath();
-        this.mTmpDirPath = this.mBinDir.getAbsolutePath();
         this.mCallback = callback;
-        this.mOutputStream = output;
         this.mArgs = args;
+        this.mRunAsRoot = runAsRoot;
+        PrintWriter tmpPrintWriter;
+        if (output == null) {
+            try {
+                tmpPrintWriter = new PrintWriter(new BufferedWriter(new FileWriter(new File(mBinDir, DEFAULT_LOG_FILE_NAME), true)));
+            } catch (Exception e) {
+                Log.e(TAG, e.getMessage(), e);
+                tmpPrintWriter = new PrintWriter(System.err);
+            }
+        } else {
+            tmpPrintWriter = new PrintWriter(output);
+        }
+        this.mOutputWriter = tmpPrintWriter;
     }
 
     @Override
@@ -72,47 +101,53 @@ public final class RunnableThread extends Thread {
             }
         }
 
-        String[] launch = new String[1 + (mArgs == null ? 0 : mArgs.length)];
-        launch[0] = mBinFile.getAbsolutePath();
-        if (mArgs != null) {
-            int i = 1;
-            for (String arg : mArgs) {
-                launch[i] = arg;
-                i++;
-            }
-        }
-        Log.d(TAG, "Launch command: " + TextUtils.join(" ", launch));
-        ProcessBuilder pb = new ProcessBuilder(launch);
-        pb.redirectErrorStream(true);
-        pb.directory(this.mBinDir);
-        Map<String, String> env = pb.environment();
-        for (Map.Entry<String, String> e : env.entrySet()) {
-            Log.d(TAG, "ENV[" + e.getKey() + "] " + e.getValue());
-        }
-        env.put("TMP", this.mTmpDirPath);
-        env.put("TEMP", this.mTmpDirPath);
+        Map<String, String> env = new HashMap<>();
         env.put("PATH", env.get("PATH") + ":" + this.mBinDirPath);
         env.put("HOME", this.mBinDirPath);
-        Process javap = null;
-        try {
-            javap = pb.start();
-            StreamGobbler inputGobbler;
-            if (this.mOutputStream != null) {
-                inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, mOutputStream);
-            } else {
-                inputGobbler = new StreamGobbler(javap.getInputStream(), TAG, new File(mBinDir, DEFAULT_LOG_FILE_NAME));
-            }
-            inputGobbler.start();
-            javap.waitFor();
-            inputGobbler.interrupt();
-        } catch (Throwable t) {
-            Log.e(TAG, t.getMessage(), t);
-        } finally {
-            if (javap != null) {
-                javap.destroy();
-            }
+
+        List<String> launchCommand = new ArrayList<>();
+        launchCommand.add(mBinFile.getAbsolutePath());
+        if (mArgs != null) {
+            Collections.addAll(launchCommand, mArgs);
         }
-        if (mCallback != null) {
+        String[] launchCommandArray = new String[launchCommand.size()];
+        launchCommandArray = launchCommand.toArray(launchCommandArray);
+
+        try {
+            RootShell.debugMode = true;
+            RootShell.defaultCommandTimeout = 0;
+            Shell rootShell = RootShell.getShell(mRunAsRoot);
+            rootShell.add(new Command(0, "cd " + mBinDirPath, IOUtils.join(" ", launchCommandArray)) {
+                @Override
+                public void commandOutput(int id, String line) {
+                    if (mOutputWriter != null) {
+                        mOutputWriter.println(line);
+                    }
+                    super.commandOutput(id, line);
+                }
+
+                @Override
+                public void commandCompleted(int id, int exitcode) {
+                    finishUp();
+                }
+
+                @Override
+                public void commandTerminated(int id, String reason) {
+                    finishUp();
+                }
+            });
+        } catch (IOException | TimeoutException | RootDeniedException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
+    private void finishUp() {
+        if (mOutputWriter != null) {
+            mOutputWriter.flush();
+            mOutputWriter.close();
+        }
+        if (mCallback != null && !mFinishedFired) {
+            mFinishedFired = true;
             mCallback.threadFinished();
         }
     }

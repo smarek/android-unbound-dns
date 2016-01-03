@@ -16,6 +16,7 @@
 package cz.msebera.unbound.dns.fragments;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -26,9 +27,10 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.stericson.RootShell.RootShell;
+
 import cz.msebera.unbound.dns.C;
 import cz.msebera.unbound.dns.R;
-import eu.chainfire.libsuperuser.Shell;
 
 public final class SettingsFragment extends Fragment {
 
@@ -92,6 +94,16 @@ public final class SettingsFragment extends Fragment {
             mCell.setChecked(mPreferences.getBoolean(C.PREF_CELL, false));
             mWifi.setChecked(mPreferences.getBoolean(C.PREF_WIFI, false));
         }
-        mRoot.setEnabled(Shell.SU.available());
+        new AsyncTask<Void, Void, Boolean>() {
+            @Override
+            protected Boolean doInBackground(Void... params) {
+                return RootShell.isRootAvailable();
+            }
+
+            @Override
+            protected void onPostExecute(Boolean aBoolean) {
+                mRoot.setEnabled(aBoolean);
+            }
+        };
     }
 }

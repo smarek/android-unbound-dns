@@ -19,8 +19,11 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -37,6 +40,7 @@ public final class UnboundService extends Service {
     private boolean mIsForeground = false;
     private boolean mIsStarted = false;
     private RunnableThread mMainRunnable;
+    private SharedPreferences mPreferences;
 
     public boolean isRunning() {
         return mIsForeground;
@@ -80,6 +84,7 @@ public final class UnboundService extends Service {
             }
             mMainRunnable.interrupt();
         }
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         updateZipFromAssets();
         mMainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
@@ -113,7 +118,7 @@ public final class UnboundService extends Service {
             public void threadFinished() {
                 stop();
             }
-        }, this, getString(R.string.filename_unbound), new String[]{"-c", getString(R.string.filename_unbound_conf)});
+        }, this, getString(R.string.filename_unbound), mPreferences.getBoolean(C.PREF_ROOT, false), new String[]{"-c", getString(R.string.filename_unbound_conf)});
         mMainRunnable.start();
     }
 
@@ -121,7 +126,7 @@ public final class UnboundService extends Service {
         Log.d(TAG, "updateZipFromAssets");
         IOUtils.copyFile(getApplicationContext(), getString(R.string.filename_package_zip));
         IOUtils.unzip(new File(getFilesDir(), getString(R.string.filename_package_zip)), getFilesDir());
-        IOUtils.createConfigFromDefault(getFilesDir(), this);
+        IOUtils.createConfigFromDefaultIfNotExists(getFilesDir(), this);
     }
 
     private void goForeground() {
@@ -141,11 +146,15 @@ public final class UnboundService extends Service {
                 .Builder(android.R.drawable.ic_media_pause, getString(R.string.menu_stop), stopPendingIntent)
                 .build();
         Notification notification = new NotificationCompat.Builder(getApplicationContext())
-                .setContentTitle(getString(R.string.app_name))
+                .setContentTitle(getString(R.string.dns_app_name))
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setPriority(Notification.PRIORITY_MIN)
+                .setCategory(NotificationCompat.CATEGORY_SERVICE)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setColor(Color.RED)
                 .addAction(stopAction)
                 .setWhen(System.currentTimeMillis())
-                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+                .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setOngoing(true)
                 .build();
         startForeground(NOTIFICATION_ID, notification);

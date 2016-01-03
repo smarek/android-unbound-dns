@@ -32,7 +32,7 @@ import java.util.zip.ZipInputStream;
 
 public class IOUtils {
 
-    public static void createConfigFromDefault(File directory, Context ctx) {
+    public static void createConfigFromDefaultIfNotExists(File directory, Context ctx) {
         try {
             File confFile = new File(directory, ctx.getString(R.string.path_unbound_conf));
             if (!confFile.exists()) {
@@ -109,4 +109,18 @@ public class IOUtils {
         return false;
     }
 
+    public static String join(String join, String... strings) {
+        if (strings == null || strings.length == 0) {
+            return "";
+        } else if (strings.length == 1) {
+            return strings[0];
+        } else {
+            StringBuilder sb = new StringBuilder();
+            sb.append(strings[0]);
+            for (int i = 1; i < strings.length; i++) {
+                sb.append(join).append(strings[i]);
+            }
+            return sb.toString();
+        }
+    }
 }

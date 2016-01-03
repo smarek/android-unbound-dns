@@ -93,7 +93,7 @@ public final class UnboundCheckConf extends Fragment {
             mMainRunnable.interrupt();
             mMainRunnable = null;
         }
-        mMainRunnable = new RunnableThread(null, getActivity(), getString(R.string.filename_unbound_checkconf), new String[]{getString(R.string.filename_unbound_conf)}, mTextAreaOutputStream);
+        mMainRunnable = new RunnableThread(null, getActivity(), getString(R.string.filename_unbound_checkconf), false, new String[]{getString(R.string.filename_unbound_conf)}, mTextAreaOutputStream);
         mTextArea.setText(String.format(getString(R.string.checkconf_console_command_run), getString(R.string.filename_unbound_conf)));
         mMainRunnable.start();
     }
