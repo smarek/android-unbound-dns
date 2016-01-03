@@ -146,7 +146,7 @@ public final class UnboundService extends Service {
                 .Builder(android.R.drawable.ic_media_pause, getString(R.string.menu_stop), stopPendingIntent)
                 .build();
         Notification notification = new NotificationCompat.Builder(getApplicationContext())
-                .setContentTitle(getString(R.string.dns_app_name))
+                .setContentTitle(getString(R.string.app_name))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setPriority(Notification.PRIORITY_MIN)
                 .setCategory(NotificationCompat.CATEGORY_SERVICE)
