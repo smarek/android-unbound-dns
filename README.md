@@ -1,12 +1,12 @@
-# Android Unbound DNS
+# Android Unbound DNS [![Build Status](https://travis-ci.org/smarek/android-unbound-dns.svg)](https://travis-ci.org/smarek/android-unbound-dns)
 
 ![Android Unbound DNS logo](https://raw.githubusercontent.com/smarek/android-unbound-dns/master/Android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png "Android application Logo")
 
 Goal is to get Unbound DNS fully working with UI to configure it and system integration (replacing system DNS)
 
-**Step-By-Step Guide**:  
+**Step-By-Step Guide:**  
 
-Requirements:
+Compile Unbound DNS for Android:
 
   - Android NDK r10d
   - Set environment variables according to your local paths
@@ -21,7 +21,19 @@ Requirements:
     - ./package.sh
   - Final compiled binaries and libraries are put within "package" directory in build root
 
-**Running**:  
+**Compile Android application:**  
+
+  - Move to Android directory
+    - cd Android
+  - Check that package.zip is in place
+    - ls -lsa app/src/main/assets/package.zip
+  - Compile android app using Gradle
+    - ./gradlew clean assemble -q -S
+    - ./gradlew check -q -S
+  - Install Android application to connected device
+    - ./gradlew installDebug
+
+**Running Unbound DNS standalone from ADB SHELL:**  
 
   - # Upload the package to android device
   - `adb push package.zip /data/local/tmp/`
