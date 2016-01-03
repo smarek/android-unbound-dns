@@ -107,7 +107,7 @@ public final class MainLogFragment extends Fragment implements TailerListener {
         switch (item.getItemId()) {
             case MENU_EMPTY:
                 try {
-                    FileWriter fw = new FileWriter(new File(getActivity().getFilesDir(), getString(R.string.path_unbound_conf)), false);
+                    FileWriter fw = new FileWriter(new File(getActivity().getFilesDir(), getString(R.string.path_mainlog)), false);
                     fw.write("");
                     fw.close();
                     Toast.makeText(getActivity(), R.string.configuration_saved, Toast.LENGTH_LONG).show();
