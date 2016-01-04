@@ -89,7 +89,7 @@ public final class SettingsFragment extends Fragment {
         super.onResume();
         mPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (mPreferences != null) {
-            mRoot.setChecked(mPreferences.getBoolean(C.PREF_ROOT, false));
+            mRoot.setChecked(mPreferences.getBoolean(C.PREF_ROOT, true));
             mBoot.setChecked(mPreferences.getBoolean(C.PREF_BOOT, true));
             mCell.setChecked(mPreferences.getBoolean(C.PREF_CELL, false));
             mWifi.setChecked(mPreferences.getBoolean(C.PREF_WIFI, false));

@@ -138,7 +138,7 @@ public final class UnboundService extends Service {
                     public void threadFinished(List<String> optionalOutput) {
                         startWatchingRunsOk();
                     }
-                }, UnboundService.this, getString(R.string.filename_unbound), mPreferences.getBoolean(C.PREF_ROOT, false), new String[]{"-c", getString(R.string.filename_unbound_conf)});
+                }, UnboundService.this, getString(R.string.filename_unbound), mPreferences.getBoolean(C.PREF_ROOT, true), new String[]{"-c", getString(R.string.filename_unbound_conf)});
                 mMainRunnable.start();
             }
         }, this, getString(R.string.filename_unbound_control), false, new String[]{"stop"}).start();
