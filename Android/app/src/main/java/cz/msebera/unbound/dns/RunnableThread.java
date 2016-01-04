@@ -130,7 +130,15 @@ public final class RunnableThread extends Thread {
 
         try {
             Shell rootShell = RootShell.getShell(mRunAsRoot);
-            rootShell.add(new Command(0, "cd " + mBinDirPath, IOUtils.join(" ", launchCommandArray)) {
+            String[] cmds = new String[2 + env.size()];
+            cmds[0] = "cd " + mBinDirPath;
+            int i = 1;
+            for (Map.Entry<String, String> entry : env.entrySet()) {
+                cmds[i] = String.format("export %s=%s", entry.getKey(), entry.getValue());
+                i++;
+            }
+            cmds[cmds.length - 1] = IOUtils.join(" ", launchCommandArray);
+            rootShell.add(new Command(0, cmds) {
                 @Override
                 public void commandOutput(int id, String line) {
                     super.commandOutput(id, line);
