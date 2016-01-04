@@ -44,6 +44,8 @@ public final class MainLogFragment extends Fragment implements TailerListener {
     static final int MENU_EMPTY = 0xbaf;
     private TextView mTextArea;
     private Tailer mTailer;
+    private long notFoundReported = 0;
+    private long rotatedReported = 0;
 
     public MainLogFragment() {
         setHasOptionsMenu(true);
@@ -55,14 +57,16 @@ public final class MainLogFragment extends Fragment implements TailerListener {
 
     @Override
     public void fileNotFound() {
-        if (mTextArea != null) {
+        if (mTextArea != null && notFoundReported < (System.currentTimeMillis() - 10000)) {
+            notFoundReported = System.currentTimeMillis();
             appendToTextArea(getString(R.string.error_logfile_not_found));
         }
     }
 
     @Override
     public void fileRotated() {
-        if (mTextArea != null) {
+        if (mTextArea != null && rotatedReported < (System.currentTimeMillis() - 10000)) {
+            rotatedReported = System.currentTimeMillis();
             appendToTextArea(getString(R.string.mainlog_logfile_rotated));
         }
     }
