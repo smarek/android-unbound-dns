@@ -32,6 +32,7 @@ import android.util.Log;
 import com.stericson.RootShell.RootShell;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public final class UnboundService extends Service {
@@ -53,8 +54,12 @@ public final class UnboundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        RootShell.defaultCommandTimeout = 0;
-        start();
+        if (intent != null && ACTION_STOP.equalsIgnoreCase(intent.getAction())) {
+            stop();
+        } else {
+            RootShell.defaultCommandTimeout = 0;
+            start();
+        }
         return START_NOT_STICKY;
     }
 
@@ -72,6 +77,11 @@ public final class UnboundService extends Service {
                 if (mMainRunnable != null && !mMainRunnable.isInterrupted()) {
                     mMainRunnable.interrupt();
                 }
+                try {
+                    RootShell.closeAllShells();
+                } catch (IOException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
                 mIsStarted = false;
             }
         }, this, getString(R.string.filename_unbound_control), new String[]{"stop"}).start();
@@ -80,11 +90,7 @@ public final class UnboundService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        if (ACTION_STOP.equalsIgnoreCase(intent.getAction())) {
-            stop();
-        } else {
-            start();
-        }
+        start();
         return mBinder;
     }
 
@@ -176,7 +182,7 @@ public final class UnboundService extends Service {
                 .getService(
                         getApplicationContext(),
                         REQUEST_STOP, stopIntent,
-                        PendingIntent.FLAG_ONE_SHOT
+                        PendingIntent.FLAG_UPDATE_CURRENT
                 );
         NotificationCompat.Action stopAction = new NotificationCompat.Action
                 .Builder(android.R.drawable.ic_media_pause, getString(R.string.menu_stop), stopPendingIntent)
