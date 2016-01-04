@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Secure DNS</string>
+    <string name="app_name">Android Unbound DNS</string>
+    <string name="app_name_short">A. U. DNS</string>
 
     <string name="settings_run_as_root">Run as Root (Allow to listen on port 53)</string>
     <string name="settings_run_on_boot">Start Unbound service on Boot</string>
