@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ public final class MainActivity extends AppCompatActivity {
     private Button mStartStopButton;
     private Button mReloadButton;
     private UnboundService.UnboundServiceBinder mServiceBinder;
+    private Handler mHandler = new Handler();
 
     private View.OnClickListener mButtonOnClickListener = new View.OnClickListener() {
         @Override
@@ -39,7 +41,7 @@ public final class MainActivity extends AppCompatActivity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             setButtonsEnabled(true);
             mServiceBinder = (UnboundService.UnboundServiceBinder) service;
-            setCorrectButtonsText();
+            pingService();
         }
 
         @Override
@@ -48,6 +50,16 @@ public final class MainActivity extends AppCompatActivity {
             mServiceBinder = null;
         }
     };
+
+    private void pingService() {
+        setCorrectButtonsText();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pingService();
+            }
+        }, 1000);
+    }
 
     private void setCorrectButtonsText() {
         if (mServiceBinder != null && mServiceBinder.getService() != null) {

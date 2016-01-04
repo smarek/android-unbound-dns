@@ -22,13 +22,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.stericson.RootShell.RootShell;
+
 import java.io.File;
+import java.util.List;
 
 public final class UnboundService extends Service {
 
@@ -41,6 +45,7 @@ public final class UnboundService extends Service {
     private boolean mIsStarted = false;
     private RunnableThread mMainRunnable;
     private SharedPreferences mPreferences;
+    private Handler mHandler = new Handler();
 
     public boolean isRunning() {
         return mIsForeground;
@@ -48,6 +53,7 @@ public final class UnboundService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        RootShell.defaultCommandTimeout = 0;
         start();
         return START_NOT_STICKY;
     }
@@ -58,12 +64,17 @@ public final class UnboundService extends Service {
     }
 
     public void stop() {
-        stopForeground(true);
-        mIsForeground = false;
-        if (mMainRunnable != null && !mMainRunnable.isInterrupted()) {
-            mMainRunnable.interrupt();
-        }
-        mIsStarted = false;
+        new RunnableThread(new RunnableThread.RunnableThreadCallback() {
+            @Override
+            public void threadFinished(List<String> optionalOutput) {
+                stopForeground(true);
+                mIsForeground = false;
+                if (mMainRunnable != null && !mMainRunnable.isInterrupted()) {
+                    mMainRunnable.interrupt();
+                }
+                mIsStarted = false;
+            }
+        }, this, getString(R.string.filename_unbound_control), new String[]{"stop"}).start();
     }
 
     @Nullable
@@ -88,7 +99,7 @@ public final class UnboundService extends Service {
         updateZipFromAssets();
         mMainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
-            public void threadFinished() {
+            public void threadFinished(List<String> optionalOutput) {
                 startUnboundAnchor();
             }
         }, this, getString(R.string.filename_unbound_control_setup), new String[]{"-d", "."});
@@ -102,7 +113,7 @@ public final class UnboundService extends Service {
         }
         mMainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
-            public void threadFinished() {
+            public void threadFinished(List<String> optionalOutput) {
                 startUnbound();
             }
         }, this, getString(R.string.filename_unbound_anchor), new String[]{"-C", getString(R.string.filename_unbound_conf), "-v"});
@@ -113,13 +124,38 @@ public final class UnboundService extends Service {
         if (mMainRunnable != null) {
             mMainRunnable.interrupt();
         }
-        mMainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
+        new RunnableThread(new RunnableThread.RunnableThreadCallback() {
             @Override
-            public void threadFinished() {
-                stop();
+            public void threadFinished(List<String> optionalOutput) {
+                mMainRunnable = new RunnableThread(new RunnableThread.RunnableThreadCallback() {
+                    @Override
+                    public void threadFinished(List<String> optionalOutput) {
+                        startWatchingRunsOk();
+                    }
+                }, UnboundService.this, getString(R.string.filename_unbound), mPreferences.getBoolean(C.PREF_ROOT, false), new String[]{"-c", getString(R.string.filename_unbound_conf)});
+                mMainRunnable.start();
             }
-        }, this, getString(R.string.filename_unbound), mPreferences.getBoolean(C.PREF_ROOT, false), new String[]{"-c", getString(R.string.filename_unbound_conf)});
-        mMainRunnable.start();
+        }, this, getString(R.string.filename_unbound_control), false, new String[]{"stop"}).start();
+
+    }
+
+    private void startWatchingRunsOk() {
+        new RunnableThread(new RunnableThread.RunnableThreadCallback() {
+            @Override
+            public void threadFinished(List<String> optionalOutput) {
+                if (optionalOutput.size() <= 1) {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            startWatchingRunsOk();
+                        }
+                    }, 10000);
+                } else {
+                    stop();
+                }
+            }
+        }, this, "unbound-control", false, new String[]{"-q", "status"}, true).start();
+
     }
 
     private void updateZipFromAssets() {

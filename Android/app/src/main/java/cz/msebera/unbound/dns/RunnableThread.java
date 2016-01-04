@@ -48,6 +48,8 @@ public final class RunnableThread extends Thread {
     private final PrintWriter mOutputWriter;
     private final RunnableThreadCallback mCallback;
     private boolean mFinishedFired = false;
+    private final List<String> mOutput = new ArrayList<>();
+    private final boolean mCollectOutput;
 
     public RunnableThread(RunnableThreadCallback callback, Context context, String binName, String[] args) {
         this(callback, new File(context.getFilesDir(), "package"), binName, false, args, null);
@@ -57,11 +59,23 @@ public final class RunnableThread extends Thread {
         this(callback, new File(context.getFilesDir(), "package"), binName, runAsRoot, args, null);
     }
 
+    public RunnableThread(RunnableThreadCallback callback, Context context, String binName, boolean runAsRoot, String[] args, boolean collectOutput) {
+        this(callback, new File(context.getFilesDir(), "package"), binName, runAsRoot, args, null, collectOutput);
+    }
+
     public RunnableThread(RunnableThreadCallback callback, Context context, String binName, boolean runAsRoot, String[] args, OutputStream output) {
         this(callback, new File(context.getFilesDir(), "package"), binName, runAsRoot, args, output);
     }
 
+    public RunnableThread(RunnableThreadCallback callback, Context context, String binName, boolean runAsRoot, String[] args, OutputStream output, boolean collectOutput) {
+        this(callback, new File(context.getFilesDir(), "package"), binName, runAsRoot, args, output, collectOutput);
+    }
+
     public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, boolean runAsRoot, String[] args, OutputStream output) {
+        this(callback, workDir, binName, runAsRoot, args, output, false);
+    }
+
+    public RunnableThread(RunnableThreadCallback callback, File workDir, String binName, boolean runAsRoot, String[] args, OutputStream output, boolean collectOutput) {
         this.mBinFile = new File(workDir, "bin/" + binName);
         this.TAG = "RunnableThread:" + binName;
         this.mBinDir = this.mBinFile.getParentFile();
@@ -69,6 +83,7 @@ public final class RunnableThread extends Thread {
         this.mCallback = callback;
         this.mArgs = args;
         this.mRunAsRoot = runAsRoot;
+        this.mCollectOutput = collectOutput;
         PrintWriter tmpPrintWriter;
         if (output == null) {
             try {
@@ -114,16 +129,20 @@ public final class RunnableThread extends Thread {
         launchCommandArray = launchCommand.toArray(launchCommandArray);
 
         try {
-            RootShell.debugMode = true;
-            RootShell.defaultCommandTimeout = 0;
             Shell rootShell = RootShell.getShell(mRunAsRoot);
             rootShell.add(new Command(0, "cd " + mBinDirPath, IOUtils.join(" ", launchCommandArray)) {
                 @Override
                 public void commandOutput(int id, String line) {
+                    super.commandOutput(id, line);
+                    if (line == null || line.trim().length() == 0) {
+                        return;
+                    }
                     if (mOutputWriter != null) {
                         mOutputWriter.println(line);
                     }
-                    super.commandOutput(id, line);
+                    if (mCollectOutput) {
+                        mOutput.add(line);
+                    }
                 }
 
                 @Override
@@ -148,11 +167,11 @@ public final class RunnableThread extends Thread {
         }
         if (mCallback != null && !mFinishedFired) {
             mFinishedFired = true;
-            mCallback.threadFinished();
+            mCallback.threadFinished(mOutput);
         }
     }
 
     public interface RunnableThreadCallback {
-        void threadFinished();
+        void threadFinished(List<String> optionalOutput);
     }
 }
