@@ -16,7 +16,7 @@
         android:autoLink="none"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:gravity="bottom|left"
+        android:gravity="bottom|start"
         android:scrollbars="vertical"
         android:singleLine="false"
         android:textColor="@android:color/black"

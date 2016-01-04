@@ -42,7 +42,8 @@ public final class MainLogFragment extends Fragment implements TailerListener {
     static final String TAG = "MainLogFragment";
     static final int MENU_CLEAR = 0xfab;
     static final int MENU_EMPTY = 0xbaf;
-    TextView mTextArea;
+    private TextView mTextArea;
+    private Tailer mTailer;
 
     public MainLogFragment() {
         setHasOptionsMenu(true);
@@ -98,7 +99,7 @@ public final class MainLogFragment extends Fragment implements TailerListener {
         View v = inflater.inflate(R.layout.textview, container, false);
         mTextArea = (TextView) v.findViewById(R.id.textview);
         File logFile = new File(getActivity().getFilesDir(), getString(R.string.path_mainlog));
-        Tailer.create(logFile, this, 400, true);
+        mTailer = Tailer.create(logFile, this, 400, true);
         return v;
     }
 
