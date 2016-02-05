@@ -12,12 +12,12 @@ error ( ) {
 
 export _UNBOUND_NAME=unbound-1.5.7
 export _LIBEVENT_NAME=libevent-2.0.22-stable
-export _OPENSSL_NAME=openssl-1.0.2e
+export _OPENSSL_NAME=openssl-1.0.2f
 export _EXPAT_NAME=expat-2.1.0
 
 export _UNBOUND_URL="https://unbound.net/downloads/unbound-1.5.7.tar.gz"
 export _LIBEVENT_URL="https://github.com/libevent/libevent/releases/download/release-2.0.22-stable/libevent-2.0.22-stable.tar.gz"
-export _OPENSSL_URL="https://www.openssl.org/source/openssl-1.0.2e.tar.gz"
+export _OPENSSL_URL="https://www.openssl.org/source/openssl-1.0.2f.tar.gz"
 export _EXPAT_URL="http://kent.dl.sourceforge.net/project/expat/expat/2.1.0/expat-2.1.0.tar.gz"
 
 export ANDROID_NDK_HOME="$LOCAL_ANDROID_NDK_HOME"
