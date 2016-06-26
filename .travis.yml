@@ -24,6 +24,9 @@ before_script:
   - env
   - pwd
 script:
+  - gpg --keyserver hkp://hkps.pool.sks-keyservers.net --recv-key 0x8D29319A
+  - gpg --keyserver hkp://hkps.pool.sks-keyservers.net --recv-key 0x0E604491
+  - gpg --keyserver hkp://hkps.pool.sks-keyservers.net --recv-key 0x7E045F8D
   - bash ./download.sh
   - bash ./cleanup.sh
   - bash ./build.sh
