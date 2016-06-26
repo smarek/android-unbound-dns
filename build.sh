@@ -12,7 +12,7 @@ export CC=gcc
 # Build OpenSSL library
 
 cd $_OPENSSL_NAME
-test ! -x build || mkdir build
+test -d build || mkdir build
 echo "OpenSSL configure"
 ./Configure no-ssl2 no-ssl3 no-shared no-zlib no-comp no-hw -fPIC -pie -fpic --install_prefix=`pwd`/build/ --prefix=".//" --openssldir="ssl" android &> configure.log
 echo "OpenSSL make"
@@ -28,7 +28,7 @@ export CC=arm-linux-androideabi-gcc
 
 # Build Expat library (LibExpat)
 cd $_EXPAT_NAME
-test ! -x build || mkdir build
+test -d build || mkdir build
 echo "Expat configure"
 ./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --disable-shared &> configure.log
 echo "Expat make"
@@ -40,7 +40,7 @@ cd ..
 # Build Libevent
 export CFLAGS="--sysroot=$ANDROID_SYSROOT -pie -fPIE -march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16"
 cd $_LIBEVENT_NAME
-test ! -x build || mkdir build
+test -d build || mkdir build
 echo "LibEvent configure"
 ./configure --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --prefix=`pwd`/build/ --disable-shared &> configure.log
 echo "LibEvent make"
@@ -55,9 +55,9 @@ source _setenv_android.bash
 
 # Configure and build Unbound
 cd $_UNBOUND_NAME
-test ! -x build || mkdir build
+test -d build || mkdir build
 echo "Unbound configure"
-./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_NDK_SYSROOT --host=arm-linux-androideabi --with-ssl=`pwd`/../$_OPENSSL_NAME/build/ --with-libexpat=`pwd`/../expat-2.1.0/build/ --with-libevent=`pwd`/../libevent-2.0.22-stable/build/ --enable-checking --with-pthreads --with-pic --with-run-dir="." --with-pidfile="unbound.pid" --with-chroot-dir="." --with-conf-file="unbound.conf" --with-rootkey-file="root.key" --disable-shared --disable-flto &> configure.log
+./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_NDK_SYSROOT --host=arm-linux-androideabi --with-ssl=`pwd`/../$_OPENSSL_NAME/build/ --with-libexpat=`pwd`/../$_EXPAT_NAME/build/ --with-libevent=`pwd`/../$_LIBEVENT_NAME/build/ --enable-checking --with-pthreads --with-pic --with-run-dir="." --with-pidfile="unbound.pid" --with-chroot-dir="." --with-conf-file="unbound.conf" --with-rootkey-file="root.key" --disable-shared --disable-flto &> configure.log
 echo "Unbound make"
 make -j &> make.log
 echo "Unbound make install"
