@@ -13,18 +13,16 @@ android:
 before_script:
   - export TERM=dumb
   - curl -L http://dl.google.com/android/repository/android-ndk-r12-linux-x86_64.zip -O
-  - unzip android-ndk-r12-linux-x86_64.zip
+  - unzip -q android-ndk-r12-linux-x86_64.zip
   - export ANDROID_NDK_HOME=`pwd`/android-ndk-r12
   - export LOCAL_ANDROID_NDK_HOME="$ANDROID_NDK_HOME"
   - export LOCAL_ANDROID_NDK_HOST_PLATFORM="linux-x86_64"
   - export PATH=$PATH:${ANDROID_NDK_HOME}
   - export _NO_CHECK_SIGNATURE=true
-  - env
-  - pwd
 script:
-  - gpg --keyserver hkp://hkps.pool.sks-keyservers.net --recv-key 0x8D29319A
-  - gpg --keyserver hkp://hkps.pool.sks-keyservers.net --recv-key 0x0E604491
-  - gpg --keyserver hkp://hkps.pool.sks-keyservers.net --recv-key 0x7E045F8D
+  - gpg -q --keyserver hkp://hkps.pool.sks-keyservers.net --recv-key 0x8D29319A
+  - gpg -q --keyserver hkp://hkps.pool.sks-keyservers.net --recv-key 0x0E604491
+  - gpg -q --keyserver hkp://hkps.pool.sks-keyservers.net --recv-key 0x7E045F8D
   - bash ./download.sh
   - bash ./cleanup.sh
   - bash ./build.sh
@@ -32,14 +30,3 @@ script:
   - cd Android
   - ./gradlew clean assemble -q -S
   - ./gradlew check -q -S
-after_script:
-  - cat app/build/outputs/lint-results.xml
-  - cd ..
-  - cat expat-2.2.0/config.log
-  - cat expat-2.2.0/configure.log
-  - cat expat-2.2.0/make.install.log
-  - cat expat-2.2.0/make.log
-  - cat openssl-1.0.2h/configure.log
-  - cat openssl-1.0.2h/make.depend.log
-  - cat openssl-1.0.2h/make.log
-  - cat openssl-1.0.2h/make.install_sw.log
