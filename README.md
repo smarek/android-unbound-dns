@@ -11,6 +11,7 @@ Compile Unbound DNS for Android:
   - Android NDK r10d
   - Set environment variables according to your local paths
     - required vars are LOCAL_ANDROID_NDK_HOME and LOCAL_ANDROID_NDK_HOST_PLATFORM, see _setenv_android.bash file for reference
+    - optional var _NO_CHECK_SIGNATURE, set to non-zero value to skip GPG signatures checking
   - Download Unbound and libraries into fetched repository
     - ./download.sh
   - Run cleanup (will remove old folders and unpack original archives)
