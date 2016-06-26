@@ -27,10 +27,11 @@ curl -s -L $_OPENSSL_URL -o $_OPENSSL_NAME.tar.gz || error "Could not download O
 curl -s -L $_OPENSSL_URL_SIGNATURE -o $_OPENSSL_NAME.tar.gz.asc || error "Could not download OpenSSL PGP Signature from $_OPENSSL_URL_SIGNATURE"
 check_signature $_OPENSSL_NAME $_OPENSSL_URL_SIGNATURE_FINGERPRINT || error "Could not verify signature of $_OPENSSL_NAME.tar.gz"
 echo "Downloading LibEvent from $_LIBEVENT_URL"
-git clone $_LIBEVENT_URL $_LIBEVENT_NAME || error "Could not clone LibEvent repository from $_LIBEVENT_URL"
+test -d $_LIBEVENT_NAME || git clone $_LIBEVENT_URL $_LIBEVENT_NAME || error "Could not clone LibEvent repository from $_LIBEVENT_URL"
 cd $_LIBEVENT_NAME
+git reset --hard
 git checkout release-2.0.22-stable
-git apply ../libevent-2.0.22-stable.patch
+git apply < ../libevent-2.0.22-stable.patch
 cd ..
 echo "Downloading Unbound from $_UNBOUND_URL"
 curl -s -L $_UNBOUND_URL -o $_UNBOUND_NAME.tar.gz || error "Could not download Unbound from $_UNBOUND_URL"

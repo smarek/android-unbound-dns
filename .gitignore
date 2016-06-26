@@ -7,3 +7,4 @@
 .DS_Store
 /Android/app/src/main/assets/package.zip
 .gradle
+!/libevent*.patch
