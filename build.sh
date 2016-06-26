@@ -59,7 +59,7 @@ cd $_UNBOUND_NAME
 test -d build || mkdir build
 echo "Unbound configure"
 ./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_NDK_SYSROOT --host=arm-linux-androideabi --with-ssl=`pwd`/../$_OPENSSL_NAME/build/ --with-libexpat=`pwd`/../$_EXPAT_NAME/build/ --with-libevent=`pwd`/../$_LIBEVENT_NAME/build/ --enable-checking --with-pthreads --with-pic --with-run-dir="." --with-pidfile="unbound.pid" --with-chroot-dir="." --with-conf-file="unbound.conf" --with-rootkey-file="root.key" --disable-shared --disable-flto &> configure.log
-sed -i "s/#define HAVE_GETPWNAM 0/#undef HAVE_GETPWNAM/" config.h
+sed -i "s/#define HAVE_GETPWNAM 1/#undef HAVE_GETPWNAM/" config.h
 echo "Unbound make"
 make -j &> make.log
 echo "Unbound make install"

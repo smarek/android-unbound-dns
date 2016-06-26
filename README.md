@@ -8,7 +8,7 @@ Goal is to get Unbound DNS fully working with UI to configure it and system inte
 
 Compile Unbound DNS for Android:
 
-  - Android NDK r11c
+  - Android NDK r12
   - Set environment variables according to your local paths
     - required vars are LOCAL_ANDROID_NDK_HOME and LOCAL_ANDROID_NDK_HOST_PLATFORM, see _setenv_android.bash file for reference
     - optional var _NO_CHECK_SIGNATURE, set to non-zero value to skip GPG signatures checking
