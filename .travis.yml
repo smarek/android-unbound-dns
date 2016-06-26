@@ -20,6 +20,7 @@ before_script:
   - export LOCAL_ANDROID_NDK_HOME="$ANDROID_NDK_HOME"
   - export LOCAL_ANDROID_NDK_HOST_PLATFORM="linux-x86_64"
   - export PATH=$PATH:${ANDROID_NDK_HOME}
+  - export _NO_CHECK_SIGNATURE=true
   - find $ANDROID_NDK_HOME -type d
   - env
   - pwd
