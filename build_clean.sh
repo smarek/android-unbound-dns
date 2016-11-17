@@ -2,7 +2,9 @@
 
 echo "Cleaning build folders"
 
-source _setenv_android.bash
+[ -f _setenv_android.bash ] || { echo "Could not find _setenv_android.bash file" ; exit 1 ; }
+
+source _setenv_android.bash || { echo "Could not set enviroment variables" ; exit 1 ;}
 
 test_del ( ) {
 	echo "test_del $1"

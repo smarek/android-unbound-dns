@@ -1,5 +1,6 @@
 /expat*
 /libevent*
+!/libevent*.patch
 /openssl*
 /unbound*
 /package
@@ -7,4 +8,5 @@
 .DS_Store
 /Android/app/src/main/assets/package.zip
 .gradle
-!/libevent*.patch
+/*.log
+*.orig

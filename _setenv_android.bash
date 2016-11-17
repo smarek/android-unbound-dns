@@ -10,19 +10,19 @@ error ( ) {
         exit 1
 }
 
-export _UNBOUND_NAME=unbound-1.5.9
+export _UNBOUND_NAME=unbound-1.5.10
 export _LIBEVENT_NAME=libevent-2.0.22-stable
-export _OPENSSL_NAME=openssl-1.0.2h
+export _OPENSSL_NAME=openssl-1.0.2j
 export _EXPAT_NAME=expat-2.2.0
 
-export _UNBOUND_URL="https://unbound.net/downloads/unbound-1.5.9.tar.gz"
+export _UNBOUND_URL="https://unbound.net/downloads/unbound-1.5.10.tar.gz"
 export _LIBEVENT_URL="https://github.com/libevent/libevent.git"
-export _OPENSSL_URL="https://www.openssl.org/source/openssl-1.0.2h.tar.gz"
+export _OPENSSL_URL="https://www.openssl.org/source/openssl-1.0.2j.tar.gz"
 export _EXPAT_URL="http://kent.dl.sourceforge.net/project/expat/expat/2.2.0/expat-2.2.0.tar.bz2"
 
-export _UNBOUND_URL_SIGNATURE="https://unbound.net/downloads/unbound-1.5.9.tar.gz.asc"
+export _UNBOUND_URL_SIGNATURE="https://unbound.net/downloads/unbound-1.5.10.tar.gz.asc"
 export _UNBOUND_URL_SIGNATURE_FINGERPRINT="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D"
-export _OPENSSL_URL_SIGNATURE="https://www.openssl.org/source/openssl-1.0.2h.tar.gz.asc"
+export _OPENSSL_URL_SIGNATURE="https://www.openssl.org/source/openssl-1.0.2j.tar.gz.asc"
 export _OPENSSL_URL_SIGNATURE_FINGERPRINT="8657ABB260F056B1E5190839D9C4D26D0E604491"
 
 export ANDROID_NDK_HOME="$LOCAL_ANDROID_NDK_HOME"
