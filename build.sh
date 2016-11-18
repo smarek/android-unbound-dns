@@ -42,7 +42,7 @@ export CFLAGS="--sysroot=$ANDROID_SYSROOT -pie -fPIE -march=armv7-a -mfloat-abi=
 cd $_LIBEVENT_NAME
 test -d build || mkdir build
 echo "LibEvent configure"
-./autogen.sh
+./autogen.sh &> autogen.log
 ./configure --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --prefix=`pwd`/build/ --disable-shared &> configure.log
 echo "LibEvent make"
 make -j &> make.log
