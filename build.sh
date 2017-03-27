@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # setup environment
 source _setenv_android.bash
@@ -30,7 +30,7 @@ export CC=arm-linux-androideabi-gcc
 cd $_EXPAT_NAME
 test -d build || mkdir build
 echo "Expat configure"
-./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --disable-shared &> configure.log
+./configure --prefix=`pwd`/build --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --with-ssl=`pwd`/../$_OPENSSL_NAME/build/ --disable-shared &> configure.log
 echo "Expat make"
 make -j &> make.log
 echo "Expat make install"
@@ -48,6 +48,7 @@ echo "LibEvent make"
 make -j &> make.log
 echo "LibEvent make install"
 make -j install &> make.install.log
+bash
 cd ..
 
 # setup environment

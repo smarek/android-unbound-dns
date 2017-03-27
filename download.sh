@@ -30,8 +30,8 @@ echo "Downloading LibEvent from $_LIBEVENT_URL"
 test -d $_LIBEVENT_NAME || git clone $_LIBEVENT_URL $_LIBEVENT_NAME || error "Could not clone LibEvent repository from $_LIBEVENT_URL"
 cd $_LIBEVENT_NAME
 git reset --hard
-git checkout release-2.0.22-stable
-git apply < ../libevent-2.0.22-stable.patch
+git checkout $_LIBEVENT_GIT_BRANCH
+test -n "$_LIBEVENT_PATCH" && git apply < "$_LIBEVENT_PATCH"
 cd ..
 echo "Downloading Unbound from $_UNBOUND_URL"
 curl -s -L $_UNBOUND_URL -o $_UNBOUND_NAME.tar.gz || error "Could not download Unbound from $_UNBOUND_URL"

@@ -14,8 +14,8 @@ tar xf $_EXPAT_NAME.tar.gz || error "Cannot unpack $_EXPAT_NAME.tar.gz"
 echo "Reseting $_LIBEVENT_NAME to known state"
 cd $_LIBEVENT_NAME
 git reset --hard
-git checkout release-2.0.22-stable
-git apply < ../libevent-2.0.22-stable.patch
+git checkout $_LIBEVENT_GIT_BRANCH
+test -n "$_LIBEVENT_PATCH" && git apply < $_LIBEVENT_PATCH
 cd ..
 
 echo "cleanup.sh finished successfully"
