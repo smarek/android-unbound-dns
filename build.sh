@@ -43,7 +43,7 @@ cd $_LIBEVENT_NAME
 test -d build || mkdir build
 echo "LibEvent configure"
 ./autogen.sh &> autogen.log
-./configure --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --prefix=`pwd`/build/ --disable-shared &> configure.log
+CPPFLAGS="$CPPFLAGS -I `pwd`/../$_OPENSSL_NAME/build/include" LDFLAGS="$LDFLAGS -L`pwd`/../$_OPENSSL_NAME/build/lib/" ./configure --with-sysroot=$ANDROID_SYSROOT --host=arm-linux-androideabi --prefix=`pwd`/build/ --disable-shared &> configure.log
 echo "LibEvent make"
 make -j &> make.log
 echo "LibEvent make install"
