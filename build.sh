@@ -48,7 +48,7 @@ echo "LibEvent make"
 make -j &> make.log
 echo "LibEvent make install"
 make -j install &> make.install.log
-bash
+#bash
 cd ..
 
 # setup environment
