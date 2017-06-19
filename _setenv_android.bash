@@ -13,7 +13,7 @@ error ( ) {
 export _UNBOUND_NAME=unbound-1.6.1
 export _LIBEVENT_NAME=libevent-2.0.22-cmake-configure-fixes
 export _OPENSSL_NAME=openssl-1.0.2k
-export _EXPAT_NAME=expat-2.2.0
+export _EXPAT_NAME=expat-2.2.1
 
 export _UNBOUND_URL="https://unbound.net/downloads/unbound-1.6.1.tar.gz"
 export _LIBEVENT_URL="https://github.com/azat/libevent"
@@ -21,7 +21,7 @@ export _LIBEVENT_GIT_BRANCH="cmake-configure-fixes"
 #export _LIBEVENT_PATCH="../libevent-2.0.22-stable.patch"
 export _LIBEVENT_PATCH=""
 export _OPENSSL_URL="https://www.openssl.org/source/openssl-1.0.2k.tar.gz"
-export _EXPAT_URL="http://kent.dl.sourceforge.net/project/expat/expat/2.2.0/expat-2.2.0.tar.bz2"
+export _EXPAT_URL="http://kent.dl.sourceforge.net/project/expat/expat/2.2.1/expat-2.2.1.tar.bz2"
 
 export _UNBOUND_URL_SIGNATURE="https://unbound.net/downloads/unbound-1.6.1.tar.gz.asc"
 export _UNBOUND_URL_SIGNATURE_FINGERPRINT="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D"
