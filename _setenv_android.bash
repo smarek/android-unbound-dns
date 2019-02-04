@@ -10,30 +10,33 @@ error ( ) {
         exit 1
 }
 
-export _UNBOUND_NAME=unbound-1.6.1
-export _LIBEVENT_NAME=libevent-2.0.22-cmake-configure-fixes
-export _OPENSSL_NAME=openssl-1.0.2k
-export _EXPAT_NAME=expat-2.2.1
+export _UNBOUND_NAME=unbound-1.8.3
+export _LIBEVENT_NAME=libevent-2.1.8-stable
+export _OPENSSL_NAME=openssl-1.1.1a
+export _EXPAT_NAME=expat-2.2.6
 
-export _UNBOUND_URL="https://unbound.net/downloads/unbound-1.6.1.tar.gz"
-export _LIBEVENT_URL="https://github.com/azat/libevent"
-export _LIBEVENT_GIT_BRANCH="cmake-configure-fixes"
-#export _LIBEVENT_PATCH="../libevent-2.0.22-stable.patch"
-export _LIBEVENT_PATCH=""
-export _OPENSSL_URL="https://www.openssl.org/source/openssl-1.0.2k.tar.gz"
-export _EXPAT_URL="http://kent.dl.sourceforge.net/project/expat/expat/2.2.1/expat-2.2.1.tar.bz2"
+export _UNBOUND_URL="https://nlnetlabs.nl/downloads/unbound/unbound-1.8.3.tar.gz"
+export _LIBEVENT_URL="https://github.com/libevent/libevent.git"
+export _OPENSSL_URL="https://www.openssl.org/source/openssl-1.1.1a.tar.gz"
+export _EXPAT_URL="https://github.com/libexpat/libexpat/releases/download/R_2_2_6/expat-2.2.6.tar.bz2"
 
-export _UNBOUND_URL_SIGNATURE="https://unbound.net/downloads/unbound-1.6.1.tar.gz.asc"
+export _UNBOUND_URL_SIGNATURE="https://nlnetlabs.nl/downloads/unbound/unbound-1.8.3.tar.gz.asc"
 export _UNBOUND_URL_SIGNATURE_FINGERPRINT="EDFAA3F2CA4E6EB05681AF8E9F6F1C2D7E045F8D"
-export _OPENSSL_URL_SIGNATURE="https://www.openssl.org/source/openssl-1.0.2k.tar.gz.asc"
+export _OPENSSL_URL_SIGNATURE="https://www.openssl.org/source/openssl-1.1.1a.tar.gz.asc"
 export _OPENSSL_URL_SIGNATURE_FINGERPRINT="8657ABB260F056B1E5190839D9C4D26D0E604491"
+export _EXPAT_URL_SIGNATURE="https://github.com/libexpat/libexpat/releases/download/R_2_2_6/expat-2.2.6.tar.bz2.asc"
+export _EXPAT_URL_SIGNATURE_FINGERPRINT="3D7E959D89FACFEE38371921B00BC66A401A1600"
+export _LIBEVENT_URL_SIGNATURE=""
+export _LIBEVENT_URL_SIGNATURE_FINGERPRINT=""
+export _LIBEVENT_GIT_TAG="release-2.1.8-stable"
 
 export ANDROID_NDK_HOME="$LOCAL_ANDROID_NDK_HOME"
 test -n "$ANDROID_NDK_HOME" || error "Fill your NDK HOME in _setenv_android.bash (or set env variable LOCAL_ANDROID_NDK_HOME)"
 
-export ANDROID_NDK_PLATFORM=21
+export ANDROID_NDK_PLATFORM=28
 export ANDROID_NDK_ARCH=arm
 export ANDROID_NDK_TARGET=arm-linux-androideabi-4.9
+export TOOLCHAIN=llvm
 
 export ANDROID_NDK_HOST_PLATFORM="$LOCAL_ANDROID_NDK_HOST_PLATFORM"
 test -n "$ANDROID_NDK_HOST_PLATFORM" || error "fill in your host platform, ie. linux_x86_64 or darwin-x86_64, in _setenv_android.bash (or set env variable LOCAL_ANDROID_NDK_HOST_PLATFORM)"
@@ -55,16 +58,18 @@ export ARCH=arm
 export HOSTCC=gcc
 
 export CROSS_COMPILE=arm-linux-androideabi-
-export CC=$ANDROID_TARGET_PLATFORM-gcc
-export AR=$ANDROID_TARGET_PLATFORM-gcc-ar
-export CPP=$ANDROID_TARGET_PLATFORM-cpp
-export CXXCPP=$ANDROID_TARGET_PLATFORM-cpp
-export CXX=$ANDROID_TARGET_PLATFORM-g++
+export CC=clang
+export AR=$ANDROID_TARGET_PLATFORM-ar
+export CPP=clang
+export CXXCPP=clang
+export CXX=clang++
 export LD=$ANDROID_TARGET_PLATFORM-ld
-export NM=$ANDROID_TARGET_PLATFORM-gcc-nm
+export NM=$ANDROID_TARGET_PLATFORM-nm
 export RANLIB=$ANDROID_TARGET_PLATFORM-ranlib
 export CPPFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIC -pie -O3 -fpic"
 export CXXFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIC -pie -O3 -fpic"
 export CFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIC -pie -O3 -fpic"
 export LDFLAGS="--sysroot=$ANDROID_NDK_SYSROOT -fPIC -pie -O3 -fpic"
-export PATH=$ANDROID_NDK_HOME/toolchains/$ANDROID_NDK_TARGET/prebuilt/$ANDROID_NDK_HOST_PLATFORM/bin:$PATH
+export PATH=$ANDROID_NDK_HOME/toolchains/$TOOLCHAIN/prebuilt/$ANDROID_NDK_HOST_PLATFORM/bin:$PATH
+export ANDROID_NDK=$_ANDROID_NDK
+export CROSS_SYSROOT=$ANDROID_NDK_SYSROOT

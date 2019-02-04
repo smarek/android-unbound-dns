@@ -10,12 +10,9 @@ tar xf $_UNBOUND_NAME.tar.gz || error "Cannot unpack $_UNBOUND_NAME.tar.gz"
 echo "Unpack $_OPENSSL_NAME.tar.gz into $_OPENSSL_NAME"
 tar xf $_OPENSSL_NAME.tar.gz || error "Cannot unpack $_OPENSSL_NAME.tar.gz"
 echo "Unpack $_EXPAT_NAME.tar.gz into $_EXPAT_NAME"
-tar xf $_EXPAT_NAME.tar.gz || error "Cannot unpack $_EXPAT_NAME.tar.gz"
-echo "Reseting $_LIBEVENT_NAME to known state"
+tar xf $_EXPAT_NAME.tar.bz2 || error "Cannot unpack $_EXPAT_NAME.tar.gz"
+echo "Unpack $_LIBEVENT_NAME into $_LIBEVENT_NAME"
 cd $_LIBEVENT_NAME
-git reset --hard
-git checkout $_LIBEVENT_GIT_BRANCH
-test -n "$_LIBEVENT_PATCH" && git apply < $_LIBEVENT_PATCH
-cd ..
-
+git clean -xdf
+git checkout $_LIBEVENT_GIT_TAG
 echo "cleanup.sh finished successfully"
